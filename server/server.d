@@ -150,6 +150,17 @@ private:
 		for(; ;) {
 			count = selector.select(1);
 			
+			// do I tell that I'm alive?
+			if(notifiable.isAlive) {
+				notifiable.read(to_read);
+				
+				if(to_read == "alive") {
+					notify.write("alive");
+				}
+				
+				notifiable.clear();
+			}
+			
 			if(count > 0) {
 				foreach(SelectionKey key; selector.selectedSet) {
 					temp = cast(SocketConduit) key.conduit;
