@@ -13,6 +13,11 @@ private {
 	import tango.net.SocketConduit;
 	import tango.net.ServerSocket;
 	import tango.io.stream.DataStream;
+	import tango.io.selector.SelectSelector;
+	import tango.io.selector.EpollSelector;
+	import tango.io.selector.PollSelector;
+	import tango.io.selector.SelectorException;
+	import tango.io.selector.model.ISelector;
 }
 
 // renaming delegates to easier to use names
@@ -101,13 +106,17 @@ private:
 	Sender sender;
 	Encoder encode;
 	DataInput inputWrapper;
+	ISelector selector;
+	ServerSocket server;
 	
 public:
-	this(uint port, Sender sender, Encoder encode) {
+	this(uint port, Sender sender, ISelector selector, Encoder encode) {
 		this.port = port;
 		notifiable = new ThreadConduit;
 		this.sender = sender;
 		this.encode = encode;
+		this.selector = selector;
+		server = new ServerSocket(port, 1000, true);
 		
 		super(&run);
 	}
@@ -130,29 +139,48 @@ public:
 	}
 	
 private:
+	// must accept connections
+	// must loop through connections checking for ready to write or read (Selector)
+    // must notify Sender of Clients (share selector)
 	void run() {
-		ServerSocket sock = new ServerSocket(port, 1000, true);
-		int high, low;
-		void[] rest;
-		char[] to_read;
-		for (; ;) {
-			if(notifiable.isAlive) {
-				notifiable.read(to_read);
-				notifiable.clear;
-				
-				if(to_read == "alive")
-					notify.write("alive");
+		selector.register(server, Event.Read);
+		SocketConduit temp;
+		int count;
+		
+		for(; ;) {
+			count = selector.select(1);
+			
+			if(count > 0) {
+				foreach(SelectionKey key; selector.selectedSet) {
+					temp = cast(SocketConduit) key.conduit;
+					// must get information from temp to be sent to the subscriber
+					// then must get information from connection to be sent to subscriber
+					
+					if(key.isReadable) {
+						if(key.conduit is server)
+							selector.register(server.accept, Event.Read);
+						else {
+							selector.register(key.conduit, Event.Read | Event.Write, key.attachment);
+							auto input = new DataInput(key.conduit);
+							int high, low;
+							high = input.getInt;
+							low = input.getInt;
+							void[] message = input.get;
+							message = encode(message, true);
+							auto socket = (cast(SocketConduit) key.conduit).socket;
+							auto output = new DataOutput(subscriber[high][low].information);
+							output.putInt(port);
+							output.putInt(socket.remoteAddress.addr);
+							output.put(message);
+							output.flush;
+						}
+					}
+					if (key.isError() || key.isHangup() || key.isInvalidHandle()) {
+						selector.unregister(key.conduit);
+						key.conduit.close;
+			        }
+				}
 			}
-			
-			inputWrapper = new DataInput(sock.accept);
-			
-			high = inputWrapper.getInt;
-			low = inputWrapper.getInt;
-			rest = inputWrapper.get;
-			rest = encode(rest, true);
-			
-			if(subscribers[high][low] !is null) 
-				subscribers[high][low].information.write(rest);
 		}
 	}
 }
@@ -185,7 +213,7 @@ public:
 					else {
 						if(subscriber !is null) {
 							handlers[subscriber.port] = new Handler(
-									subscriber.port, sender, encode);
+									subscriber.port, sender, selector, encode);
 							handlers[subscriber.port].add(subscriber);
 						}
 					}
@@ -196,6 +224,18 @@ public:
 			handle.notify = notify;
 
 		super(&run);
+	}
+
+	void register(int upper, int lower, Subscriber subscriber) {
+		foreach(handle; handlers)
+			handle.add(upper, lower, subscriber);
+                subscribers[upper, lower] = subscriber;
+	}
+
+	void unRegister(int upper, int lower) {
+		foreach(handle; handlers)
+                        handle.unRegister(upper, lower);
+		subscribers[upper, lower] = null;
 	}
 
 private:
@@ -218,27 +258,32 @@ private:
 					handle.start;
 					this.sleep(5);
 				}
-			}
+ 			}
 		}
 	}
-
 }
 
+
+
+//must finish, must add registration and unregistration functions
 private class Sender: Thread { // must modify this to actually send stuff
 	// must notify all stuff of where to put data to
 	Subscriber[int][int] subscribers;
 	Encoder encode;
 
-	public this(Subscriber[int][int] subscribers, Encoder encode) {
+	public this(Subscriber[int][int] subscribers, Encoder encode, ISelector selector) {
 		this.subscribers = subscribers;
 		this.encode = encode;
 	}
 
 }
 
+
+
 class Server: Thread {
 	Reciever reciever;
 	Sender sender;
+	synchronized ISelector selector;
 
 	Subscriber[int][int] subscribers;
 	ThreadConduit[] conduits;
@@ -251,10 +296,14 @@ public:
 	}
 
 	this(Subscriber[int][int] subscribers_, Encoder encode) {
+                // get encoder
 		this.encode = encode;
-		sender = new Sender(subscribers, encode);
-		reciever = new Reciever(subscribers, encode, sender);
 
+                // setup Senders and Recievers
+		sender = new Sender(subscribers, encode, selector);
+		reciever = new Reciever(subscribers, encode, selector, sender);
+		
+                
 		if(subscribers_ !is null)
 			subscribers = subscribers_;
 
@@ -269,11 +318,15 @@ public:
 	}
 
 	void register(int upper, int lower, Subscriber subscriber) {
+		sender.register(upper, lower, subscriber);
+		reciever.register(upper, lower, subscriber);
 		subscribers[upper][lower] = subscriber;
 	}
 
 private:
 	void unRegister(int upper, int lower) {
+		sender.unRegister(upper, lower);
+		sender.unRegister(upper, lower);
 		subscribers[upper][lower] = null;
 	}
 
