@@ -7,12 +7,15 @@ import qt.gui.QMainWindow;
 //import src.Resource;
 import src.widgets.Chat;
 import src.widgets.Compiler;
+import src.widgets.ConnectWindow;
 import src.widgets.ProjectTree;
 import src.widgets.TabWidget;
 import src.widgets.UserList;
 
 class MainWindow : QMainWindow {
 	private:
+		QDockWidget[] docks;
+		
 		Chat chat;
 		Compiler compiler;
 		ProjectTree projectTree;
@@ -32,25 +35,28 @@ class MainWindow : QMainWindow {
 			
 			setCentralWidget(tabWidget);
 			createDockWidgets();
+			
+			auto connect = new ConnectWindow(this);
+			connect.show();
 		}
 	
 	private:
 		void createDockWidgets() {
-			auto projectDock = new QDockWidget(tr("Project"));
-			projectDock.setWidget(projectTree);
+			docks ~= new QDockWidget(tr("Project"));
+			docks ~= new QDockWidget(tr("Users"));
+			docks ~= new QDockWidget(tr("Compiler"));
+			docks ~= new QDockWidget(tr("Chat"));
 			
-			auto userListDock = new QDockWidget(tr("Users"));
-			userListDock.setWidget(userList);
-			
-			auto compilerDock = new QDockWidget(tr("Compiler"));
-			compilerDock.setWidget(compiler);
-			
-			auto chatDock = new QDockWidget(tr("Chat"));
-			chatDock.setWidget(chat);
-			
-			addDockWidget(Qt.LeftDockWidgetArea, projectDock);
-			addDockWidget(Qt.LeftDockWidgetArea, userListDock);
-			addDockWidget(Qt.BottomDockWidgetArea, compilerDock);
-			addDockWidget(Qt.BottomDockWidgetArea, chatDock);
+			docks[0].setWidget(projectTree);
+			docks[1].setWidget(userList);
+			docks[2].setWidget(compiler);
+			docks[3].setWidget(chat);
+		}
+		
+		void setupFrontend() {
+			addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
+			addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
+			addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
+			addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
 		}
 }
