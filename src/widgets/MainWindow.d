@@ -3,6 +3,7 @@ module src.widgets.MainWindow;
 import qt.gui.QDockWidget;
 import qt.gui.QIcon;
 import qt.gui.QLabel;
+import qt.gui.QLineEdit;
 import qt.gui.QMainWindow;
 //import src.Resource;
 import src.widgets.Chat;
@@ -11,9 +12,15 @@ import src.widgets.ConnectWindow;
 import src.widgets.ProjectTree;
 import src.widgets.TabWidget;
 import src.widgets.UserList;
+import tango.io.Stdout;
 
 class MainWindow : QMainWindow {
+	public:
+		QLineEdit host, name, password, file;
+	
 	private:
+		ConnectWindow connect;
+		
 		QDockWidget[] docks;
 		
 		Chat chat;
@@ -36,7 +43,7 @@ class MainWindow : QMainWindow {
 			setCentralWidget(tabWidget);
 			createDockWidgets();
 			
-			auto connect = new ConnectWindow(this);
+			connect = new ConnectWindow(this);
 			connect.show();
 			
 			setupFrontend();
@@ -60,5 +67,15 @@ class MainWindow : QMainWindow {
 			addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
 			addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
 			addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
+		}
+		
+		void acceptConnection() {
+			connect.close();
+			Stdout.formatln("host: {}\nname: {}\npassword: {}", host.text(), name.text(), password.text());
+		}
+		
+		void rejectConnection() {
+			connect.close();
+			Stdout.formatln("rejected");
 		}
 }
