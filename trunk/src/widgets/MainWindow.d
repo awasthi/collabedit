@@ -36,8 +36,9 @@ class MainWindow : QMainWindow {
 			setCentralWidget(tabWidget);
 			createDockWidgets();
 			
-			auto connect = new ConnectWindow(this);
-			connect.show();
+			//auto connect = new ConnectWindow(this);
+			//connect.show();
+			createDockWidgets();
 		}
 	
 	private:
