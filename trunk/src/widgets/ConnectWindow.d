@@ -12,48 +12,47 @@ import qt.gui.QSpinBox;
 import qt.gui.QStyle;
 import qt.gui.QVBoxLayout;
 import qt.gui.QWidget;
+import src.widgets.MainWindow;
 
 class ConnectWindow : QDialog {
-	private:
-		QLineEdit host, name, password, file;
-		QPushButton fileSubmit;
-	
 	public:
-		this(QWidget parent) {
+		this(MainWindow parent) {
 			super(parent);
 			
 			//setWindowIcon(new QIcon(":icon.png"));
 			setWindowTitle("Open Connection");
 			
-			host = new QLineEdit();
-			host.setInputMask("000.000.000.000:00000");
-			host.setText("127.0.0.1:49152");
+			parent.host = new QLineEdit();
+			parent.host.setInputMask("000.000.000.000:00000");
+			parent.host.setText("127.0.0.1:49152");
 			
-			name = new QLineEdit();
-			name.setText(QDir.home.dirName());
+			parent.name = new QLineEdit();
+			parent.name.setText(QDir.home.dirName());
 			
-			password = new QLineEdit();
-			password.setEchoMode(QLineEdit_EchoMode.Password);
+			parent.password = new QLineEdit();
+			parent.password.setEchoMode(QLineEdit_EchoMode.Password);
 			
-			file = new QLineEdit();
-			file.setText(QDir.currentPath() ~ "/sessions/" ~ host.text() ~ ".cedit");
+			parent.file = new QLineEdit();
+			parent.file.setText(QDir.currentPath() ~ "/sessions/" ~ parent.host.text() ~ ".cedit");
 			
-			fileSubmit = new QPushButton(style.standardIcon(QStyle.SP_DirOpenIcon), "Browse...");
+			auto fileSubmit = new QPushButton(style.standardIcon(QStyle.SP_DirOpenIcon), "Browse...");
 			
 			auto sessionFileLayout = new QHBoxLayout();
-			sessionFileLayout.addWidget(file);
+			sessionFileLayout.addWidget(parent.file);
 			sessionFileLayout.addWidget(fileSubmit);
 			
 			auto sessionFile = new QWidget();
 			sessionFile.setLayout(sessionFileLayout);
 			
 			auto layout = new QFormLayout();
-			layout.addRow(new QLabel("Host:"), host);
-			layout.addRow(new QLabel("Name:"), name);
-			layout.addRow(new QLabel("Password:"), password);
+			layout.addRow(new QLabel("Host:"), parent.host);
+			layout.addRow(new QLabel("Name:"), parent.name);
+			layout.addRow(new QLabel("Password:"), parent.password);
 			//layout.addRow(new QLabel("Session file:"), sessionFile);
 			
 			auto buttonBox = new QDialogButtonBox(QDialogButtonBox.Cancel | QDialogButtonBox.Ok);
+			buttonBox.accepted.connect(&parent.acceptConnection);
+			buttonBox.rejected.connect(&parent.rejectConnection);
 			
 			auto container = new QWidget();
 			container.setLayout(layout);
