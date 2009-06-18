@@ -63,7 +63,7 @@ class ConnectWindow : QDialog {
 			layout.addRow(new QLabel("Host:"), host);
 			layout.addRow(new QLabel("Name:"), name);
 			layout.addRow(new QLabel("Password:"), password);
-			layout.addRow(new QLabel("Session file:"), sessionFile);
+			//layout.addRow(new QLabel("Session file:"), sessionFile);
 			
 			auto buttonBox = new QDialogButtonBox(QDialogButtonBox.Cancel | QDialogButtonBox.Ok);
 			
