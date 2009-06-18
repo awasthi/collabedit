@@ -45,8 +45,6 @@ class MainWindow : QMainWindow {
 			
 			connect = new ConnectWindow(this);
 			connect.show();
-			
-			setupFrontend();
 		}
 	
 	private:
@@ -72,10 +70,12 @@ class MainWindow : QMainWindow {
 		void acceptConnection() {
 			connect.close();
 			Stdout.formatln("host: {}\nname: {}\npassword: {}", host.text(), name.text(), password.text());
+			setupFrontend();
 		}
 		
 		void rejectConnection() {
 			connect.close();
 			Stdout.formatln("rejected");
+			setupFrontend();
 		}
 }
