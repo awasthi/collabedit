@@ -15,9 +15,8 @@ import qt.gui.QWidget;
 
 class ConnectWindow : QDialog {
 	private:
-		QLineEdit ip, name, password, file;
+		QLineEdit host, name, password, file;
 		QPushButton fileSubmit;
-		QSpinBox port;
 	
 	public:
 		this(QWidget parent) {
@@ -26,20 +25,9 @@ class ConnectWindow : QDialog {
 			//setWindowIcon(new QIcon(":icon.png"));
 			setWindowTitle("Open Connection");
 			
-			ip = new QLineEdit();
-			ip.setInputMask("000.000.000.000");
-			ip.setText("127.0.0.1");
-			
-			port = new QSpinBox();
-			port.setRange(0, 65535);
-			port.setValue(49152);
-			
-			auto hostLayout = new QHBoxLayout();
-			hostLayout.addWidget(ip);
-			hostLayout.addWidget(port);
-			
-			auto host = new QWidget();
-			host.setLayout(hostLayout);
+			host = new QLineEdit();
+			host.setInputMask("000.000.000.000:00000");
+			host.setText("127.0.0.1:49152");
 			
 			name = new QLineEdit();
 			name.setText(QDir.home.dirName());
@@ -48,7 +36,7 @@ class ConnectWindow : QDialog {
 			password.setEchoMode(QLineEdit_EchoMode.Password);
 			
 			file = new QLineEdit();
-			file.setText(QDir.currentPath() ~ "/sessions/" ~ ip.text() ~ ".cedit");
+			file.setText(QDir.currentPath() ~ "/sessions/" ~ host.text() ~ ".cedit");
 			
 			fileSubmit = new QPushButton(style.standardIcon(QStyle.SP_DirOpenIcon), "Browse...");
 			
