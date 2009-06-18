@@ -1,4 +1,4 @@
-module src.widgets.MainWindow;
+module src.gui.widgets.MainWindow;
 
 import qt.gui.QDockWidget;
 import qt.gui.QIcon;
@@ -6,12 +6,12 @@ import qt.gui.QLabel;
 import qt.gui.QLineEdit;
 import qt.gui.QMainWindow;
 //import src.Resource;
-import src.widgets.Chat;
-import src.widgets.Compiler;
-import src.widgets.ConnectWindow;
-import src.widgets.ProjectTree;
-import src.widgets.TabWidget;
-import src.widgets.UserList;
+import src.gui.widgets.Chat;
+import src.gui.widgets.Compiler;
+import src.gui.widgets.ConnectWindow;
+import src.gui.widgets.ProjectTree;
+import src.gui.widgets.TabWidget;
+import src.gui.widgets.UserList;
 import tango.io.Stdout;
 
 class MainWindow : QMainWindow {

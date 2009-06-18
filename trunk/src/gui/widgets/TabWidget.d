@@ -1,4 +1,4 @@
-module src.widgets.TabWidget;
+module src.gui.widgets.TabWidget;
 
 import qt.gui.QTabWidget;
 

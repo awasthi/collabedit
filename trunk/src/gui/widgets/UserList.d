@@ -1,4 +1,4 @@
-module src.widgets.UserList;
+module src.gui.widgets.UserList;
 
 import qt.gui.QListView;
 

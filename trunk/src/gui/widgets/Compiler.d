@@ -1,4 +1,4 @@
-module src.widgets.Compiler;
+module src.gui.widgets.Compiler;
 
 import qt.gui.QTextEdit;
 
