@@ -38,7 +38,7 @@ class MainWindow : QMainWindow {
 			
 			//auto connect = new ConnectWindow(this);
 			//connect.show();
-			createDockWidgets();
+			setupFrontend();
 		}
 	
 	private:
