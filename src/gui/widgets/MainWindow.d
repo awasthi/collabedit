@@ -45,6 +45,7 @@ class MainWindow : QMainWindow {
 			
 			auto previewLabel = new QLabel();
 			previewLabel.setPixmap(resourceManager.getPixmap(ResourceManager.PREVIEW));
+			previewLabel.setAlignment(Qt.AlignCenter);
 			
 			setCentralWidget(previewLabel);
 			
