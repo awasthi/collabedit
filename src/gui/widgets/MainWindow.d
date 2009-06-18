@@ -12,10 +12,11 @@ import src.gui.widgets.ConnectWindow;
 import src.gui.widgets.ProjectTree;
 import src.gui.widgets.TabWidget;
 import src.gui.widgets.UserList;
-import tango.io.Stdout;
+import src.ResourceManager;
 
 class MainWindow : QMainWindow {
 	public:
+		ResourceManager resourceManager;
 		QLineEdit host, name, password, file;
 	
 	private:
@@ -31,7 +32,9 @@ class MainWindow : QMainWindow {
 	
 	public:
 		this() {
-			//setWindowIcon(new QIcon(":icon.png"));
+			resourceManager = new ResourceManager();
+			
+			setWindowIcon(resourceManager.getIcon(ResourceManager.WINDOW_ICON));
 			setWindowTitle(tr("collabEdit"));
 			
 			chat = new Chat();
@@ -40,8 +43,10 @@ class MainWindow : QMainWindow {
 			tabWidget = new TabWidget();
 			userList = new UserList();
 			
-			setCentralWidget(tabWidget);
-			createDockWidgets();
+			auto previewLabel = new QLabel();
+			previewLabel.setPixmap(resourceManager.getPixmap(ResourceManager.PREVIEW));
+			
+			setCentralWidget(previewLabel);
 			
 			connect = new ConnectWindow(this);
 			connect.show();
@@ -61,6 +66,9 @@ class MainWindow : QMainWindow {
 		}
 		
 		void setupFrontend() {
+			setCentralWidget(tabWidget);
+			createDockWidgets();
+			
 			addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
 			addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
 			addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
@@ -68,14 +76,18 @@ class MainWindow : QMainWindow {
 		}
 		
 		void acceptConnection() {
+			/*
+			 * host: host.text()
+			 * name: name.text()
+			 * password: password.text()
+			 */
 			connect.close();
-			Stdout.formatln("host: {}\nname: {}\npassword: {}", host.text(), name.text(), password.text());
 			setupFrontend();
 		}
 		
 		void rejectConnection() {
+			// rejected
 			connect.close();
-			Stdout.formatln("rejected");
 			setupFrontend();
 		}
 }
