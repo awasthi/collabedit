@@ -12,6 +12,7 @@ import qt.gui.QSpinBox;
 import qt.gui.QStyle;
 import qt.gui.QVBoxLayout;
 import qt.gui.QWidget;
+import src.ResourceManager;
 import src.gui.widgets.MainWindow;
 
 class ConnectWindow : QDialog {
@@ -19,7 +20,7 @@ class ConnectWindow : QDialog {
 		this(MainWindow parent) {
 			super(parent);
 			
-			//setWindowIcon(new QIcon(":icon.png"));
+			setWindowIcon(parent.resourceManager.getIcon(ResourceManager.WINDOW_ICON));
 			setWindowTitle("Open Connection");
 			
 			parent.host = new QLineEdit();

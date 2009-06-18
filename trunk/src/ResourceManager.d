@@ -1,23 +1,30 @@
 module src.ResourceManager;
 
 import qt.gui.QIcon;
+import qt.gui.QPixmap;
 import src.Resources;
 
 class ResourceManager {
 	public:
-		const enum ICON {
-			WINDOW_ICON = 0
+		const enum {
+			WINDOW_ICON = 0,
+			PREVIEW = 1
 		}
 	
 	private:
-		QIcon[] icons;
+		Object[] obj;
 	
 	public:
 		this() {
-			icons ~= new QIcon(":icon.png");
+			obj ~= new QIcon(":icon");
+			obj ~= new QPixmap(":preview");
 		}
 		
 		QIcon getIcon(int key) {
-			return icons[key];
+			return cast(QIcon) obj[key];
+		}
+		
+		QPixmap getPixmap(int key) {
+			return cast(QPixmap) obj[key];
 		}
 }

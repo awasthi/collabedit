@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
-<qresource prefix="./res/">
-   <file>icon.png</file>
+<qresource>
+	<file alias="icon">res/icon.png</file>
+	<file alias="preview">res/preview.png</file>
 </qresource>
 </RCC>
