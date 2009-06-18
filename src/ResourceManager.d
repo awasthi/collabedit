@@ -6,9 +6,9 @@ import src.Resources;
 
 class ResourceManager {
 	public:
-		const enum {
-			WINDOW_ICON = 0,
-			PREVIEW = 1
+		enum {
+			WINDOW_ICON,
+			PREVIEW
 		}
 	
 	private:
