@@ -1,4 +1,4 @@
-module src.widgets.ProjectTree;
+module src.gui.widgets.ProjectTree;
 
 import qt.gui.QTreeView;
 

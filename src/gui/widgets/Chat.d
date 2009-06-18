@@ -1,4 +1,4 @@
-module src.widgets.Chat;
+module src.gui.widgets.Chat;
 
 import qt.gui.QHBoxLayout;
 import qt.gui.QLineEdit;

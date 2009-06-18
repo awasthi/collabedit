@@ -1,7 +1,7 @@
 module src.Main;
 
 import qt.gui.QApplication;
-import src.widgets.MainWindow;
+import src.gui.widgets.MainWindow;
 
 int main(char[][] args) {
 	scope app = new QApplication(args);
