@@ -16,7 +16,7 @@ import qt.gui.QWidget;
 class ConnectWindow : QDialog {
 	private:
 		QLineEdit ip, name, password, file;
-		QPushButton color, fileSubmit;
+		QPushButton fileSubmit;
 		QSpinBox port;
 	
 	public:
@@ -41,8 +41,6 @@ class ConnectWindow : QDialog {
 			auto host = new QWidget();
 			host.setLayout(hostLayout);
 			
-			color = new QPushButton();
-			
 			name = new QLineEdit();
 			name.setText(QDir.home.dirName());
 			
@@ -63,7 +61,6 @@ class ConnectWindow : QDialog {
 			
 			auto layout = new QFormLayout();
 			layout.addRow(new QLabel("Host:"), host);
-			layout.addRow(new QLabel("Color:"), color);
 			layout.addRow(new QLabel("Name:"), name);
 			layout.addRow(new QLabel("Password:"), password);
 			layout.addRow(new QLabel("Session file:"), sessionFile);
