@@ -9,6 +9,7 @@ import qt.gui.QLabel;
 import qt.gui.QLineEdit;
 import qt.gui.QPushButton;
 import qt.gui.QSpinBox;
+import qt.gui.QStyle;
 import qt.gui.QVBoxLayout;
 import qt.gui.QWidget;
 
@@ -51,7 +52,7 @@ class ConnectWindow : QDialog {
 			file = new QLineEdit();
 			file.setText(QDir.currentPath() ~ "/sessions/" ~ ip.text() ~ ".cedit");
 			
-			fileSubmit = new QPushButton("Browse...");
+			fileSubmit = new QPushButton(style.standardIcon(QStyle.SP_DirOpenIcon), "Browse...");
 			
 			auto sessionFileLayout = new QHBoxLayout();
 			sessionFileLayout.addWidget(file);
