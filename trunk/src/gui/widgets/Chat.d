@@ -3,6 +3,7 @@ module src.gui.widgets.Chat;
 import qt.gui.QHBoxLayout;
 import qt.gui.QLineEdit;
 import qt.gui.QPushButton;
+import qt.gui.QStyle;
 import qt.gui.QTextEdit;
 import qt.gui.QVBoxLayout;
 import qt.gui.QWidget;
@@ -21,7 +22,7 @@ class Chat : QWidget {
 			
 			input = new QLineEdit();
 		
-			auto submit = new QPushButton("Send");
+			auto submit = new QPushButton(style.standardIcon(QStyle.SP_ArrowRight), "Send");
 			submit.clicked.connect(&submitClicked);
 			
 			auto hLayout = new QHBoxLayout();
