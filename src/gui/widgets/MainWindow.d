@@ -1,5 +1,6 @@
 module src.gui.widgets.MainWindow;
 
+import qt.gui.QAction;
 import qt.gui.QDockWidget;
 import qt.gui.QIcon;
 import qt.gui.QLabel;
@@ -67,6 +68,7 @@ class MainWindow : QMainWindow {
 		}
 		
 		void setupFrontend() {
+			createMenus();
 			setCentralWidget(tabWidget);
 			createDockWidgets();
 			
@@ -74,6 +76,15 @@ class MainWindow : QMainWindow {
 			addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
 			addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
 			addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
+			
+			statusBar.showMessage(tr("Ready"));
+		}
+		
+		void createMenus() {
+			auto menu = menuBar.addMenu(tr("&File"));
+			menu = menuBar.addMenu(tr("&Edit"));
+			menu = menuBar.addMenu(tr("&View"));
+			menu = menuBar.addMenu(tr("&?"));
 		}
 		
 		void acceptConnection() {
