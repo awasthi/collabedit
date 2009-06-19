@@ -69,6 +69,8 @@ class MainWindow : QMainWindow {
 		
 		void setupFrontend() {
 			createMenus();
+			createToolBars();
+			
 			setCentralWidget(tabWidget);
 			createDockWidgets();
 			
@@ -82,9 +84,16 @@ class MainWindow : QMainWindow {
 		
 		void createMenus() {
 			auto menu = menuBar.addMenu(tr("&File"));
+			//menu.addAction(...);
 			menu = menuBar.addMenu(tr("&Edit"));
 			menu = menuBar.addMenu(tr("&View"));
 			menu = menuBar.addMenu(tr("&?"));
+		}
+		
+		void createToolBars() {
+			auto bar = addToolBar(tr("File"));
+			//bar.addAction(...);
+			bar = addToolBar(tr("Edit"));
 		}
 		
 		void acceptConnection() {
