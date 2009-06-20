@@ -16,7 +16,7 @@ private {
 }
 
 /// define an extension as char[]
-typedef char[] Extension;
+alias char[] Extension;
 
 /// define the operations on a file
 enum Operations {
@@ -111,22 +111,99 @@ private:
     // should store in configuration Table
     // if there's no configuration give it the NullConf value
     void getConf(Extension ext) {
+        // got to fix for testing for stuff
+        parseExt(ext ~ ".xml");
+    }
 
+    // opens a language descriptor file
+    // and parses it into the configurations
+    void parseExt(char[] loc) {
+        //open and read file, set up document (xml)
+        auto text = pull((new FileHost(loc)).input);
+        Document!(char) doc = new Document!(char);
+
+        // parse the document before playing with it :-)
+        doc.parse(text);
+
+        // parse it into the languages array
+        auto root = doc.tree;
+
+        auto conf = new ConfigurationT;
+
+        //do some actual parsing :-)
+        foreach(elem; root.query["lang"]) {
+            conf.name = elem.attributes.value("name").value;
+
+            foreach(elem2; elem.query["keywordLists"]) {
+                foreach(elem3; elem2.query["keywords"]) {
+                    conf.keywords[elem3.attributes.value("name").value]
+                        = elem3.value;
+                }
+            }
+
+            foreach(elem2; elem.query["styles"]) {
+                foreach(elem3; elem2.query["wordsStyle"]) {
+                    conf.styles[elem3.attributes.value("name").value]
+                        =   Style(
+                                    elem3.attributes.value("color").value,
+                                    elem3.attributes.value("style").value
+                            );
+                }
+            }
+            configurations[elem.attributes.value("name").value].conf = conf;
+        }        
+    }
+
+    // pulls all of the text out this input stream
+    // returns the text
+    char[] pull(InputStream stream) {
+        char[] ret, temp;
+
+        for(; stream.read(temp) != IOStream.Eof;)
+            ret ~= temp;
+
+        return ret;
     }
 
 public:
     // gets master descriptor of extensions file and parses it
     this(char[] loc) {
+        
+        //open and read file, set up document (xml)
+        auto text = pull((new FileHost(loc)).input);
+        Document!(char) doc = new Document!(char);
+
+        // parse the document before playing with it :-)
+        doc.parse(text);
+
+        // parse it into the languages array
+        auto root = doc.tree;
+
+        // ok time for some actual parsing, hooray!
+        foreach(elem; root.query["extensions"]) {
+            foreach(elem2; elem.query["ext"]) {
+                languages[elem2.attributes.value("conf").value]
+                    = elem2.attributes.value("ext").value;
+            }
+        }
     }
 
-    ConfigurationT onOpen(Extension ext) {
+    // the on open event
+    // synchronized so no 2 accesses at same file
+    // and no 2 accesses on the configurations
+    synchronized ConfigurationT onOpen(Extension ext) {
+        // got to fix to test stuff correctly
         if(configurations[ext].isNull)
             getConf(ext);
         configurations[ext].conf.used++;
         return configurations[ext].conf;
     }
 
-    void onClose(Extension ext) {
+    // the on close event
+    // synchronized so the proper reading of the used
+    // var is done so it can actually release mem to GC
+    synchronized void onClose(Extension ext) {
+        // got to fix to test stuff correctly
         if(!configurations[ext].isNull) {
             configurations[ext].conf.used--;
 
