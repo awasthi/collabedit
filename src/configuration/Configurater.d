@@ -5,7 +5,7 @@
  Release:                       Initial, June 2009
  *******************************************************************************/
 
-module Configurater;
+module Configurater; // don't they say "Configurator" instead of "Configurater"?
 
 private {
     import tango.text.xml.Document;
