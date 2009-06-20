@@ -1,0 +1,25 @@
+
+<lang name="D">
+        <keywordLists>
+                <keywords name="delimiters">" '</keywords>
+                <keywords name="operators">"! ( ) ? [ ] < = >"</keywords>
+                <keywords name="comment">/* */</keywords>
+                <keywords name="commentLine">//</keywords>
+                <keywords name="words1">abstract alias align asm assert auto body break case cast catch class const continue debug default delegate delete deprecated do else enum export extern false final finally for foreach foreach_reverse function goto if import in inout interface invariant is lazy mixin module new null out override package pragma private private: protected protected: public public: return scope static struct super switch synchronized template this throw true try typedef typeid typeof union unittest version void volatile wchar while with ~this</keywords>
+                <keywords name="words2">bool byte cdouble cent cfloat char creal dchar double float idouble ifloat int ireal long real short ubyte ucent uint ulong ushort</keywords>
+                <keywords name="words3"></keywords>
+                <keywords name="words4"></keywords>
+        </keywordLists>
+        <styles>
+                <wordsStyle name="default" color="0,0,0" style="0" />
+                <wordsStyle name="number" color="217,0,108" style="0" />
+                <wordsStyle name="deliminer" color="175,43,255" style="0" />
+                <wordsStyle name="operator" color="0,0,0" style="0" />
+                <wordsStyle name="comment" color="0,128,0" style="0" />
+                <wordsStyle name="commentLine" color="0,128,0" style="0" />
+                <wordsStyle name="words1" color="0,0,255" style="1" />
+                <wordsStyle name="words2" color="0,0,255" style="1" />
+                <wordsStyle name="words3" color="0,0,0" style="0" />
+                <wordsStyle name="words4" color="0,0,0" style="0" />
+        </styles>
+</lang>

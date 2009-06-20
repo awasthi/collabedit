@@ -1,0 +1,4 @@
+<extensions>
+    <ext lang="d" ext="d,di"></ext>
+    <ext lang="cpp" ext="c++,cpp,cc,h,c"></ext>
+</extensions>
