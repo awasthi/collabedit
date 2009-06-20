@@ -5,7 +5,7 @@
  Release:                       Initial, June 2009
  *******************************************************************************/
 
-module Configurater; // don't they say "Configurator" instead of "Configurater"?
+module Configurator;
 
 private {
     import tango.text.xml.Document;
@@ -131,8 +131,9 @@ public:
             configurations[ext].conf.used--;
 
             if(configurations[ext].conf.used <= 0)
+                // this should make the gc able to delete the ConfigurationT
                 configurations[ext].conf   = null;
-                configurations[ext].isNull = true; //this should make gc able to delete it?
+                configurations[ext].isNull = true; 
         }
     }
 }
