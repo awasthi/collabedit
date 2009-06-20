@@ -111,8 +111,9 @@ private:
     // should store in configuration Table
     // if there's no configuration give it the NullConf value
     void getConf(Extension ext) {
-        // got to fix for testing for stuff
-        parseExt(ext ~ ".xml");
+        foreach(Extension loc, char[] list; languages) {
+            if(TUtil.containsPattern(ext, list)) parseExt(loc ~ ".xml");
+        }
     }
 
     // opens a language descriptor file
@@ -188,29 +189,43 @@ public:
         }
     }
 
-    // the on open event
-    // synchronized so no 2 accesses at same file
-    // and no 2 accesses on the configurations
+    /*
+       the on open event
+       synchronized so no 2 accesses at same file
+       and no 2 accesses on the configurations
+    */
     synchronized ConfigurationT onOpen(Extension ext) {
-        // got to fix to test stuff correctly
-        if(configurations[ext].isNull)
+        Extension use;
+
+        foreach(Extension loc, char[] list; languages) {
+            if(TUtil.containsPattern(ext, list)) use = loc;
+        }
+
+        if(configurations[use].isNull)
             getConf(ext);
-        configurations[ext].conf.used++;
-        return configurations[ext].conf;
+        configurations[use].conf.used++;
+        return configurations[use].conf;
     }
 
-    // the on close event
-    // synchronized so the proper reading of the used
-    // var is done so it can actually release mem to GC
+    /*
+       the on close event
+       synchronized so the proper reading of the used
+       var is done so it can actually release mem to GC
+    */
     synchronized void onClose(Extension ext) {
-        // got to fix to test stuff correctly
-        if(!configurations[ext].isNull) {
-            configurations[ext].conf.used--;
+        Extension use;
 
-            if(configurations[ext].conf.used <= 0)
+        foreach(Extension loc, char[] list; languages) {
+            if(TUtil.containsPattern(ext, list)) use = loc;
+        }
+
+        if(!configurations[use].isNull) {
+            configurations[use].conf.used--;
+
+            if(configurations[use].conf.used <= 0)
                 // this should make the gc able to delete the ConfigurationT
-                configurations[ext].conf   = null;
-                configurations[ext].isNull = true; 
+                configurations[use].conf   = null;
+                configurations[use].isNull = true;
         }
     }
 }
