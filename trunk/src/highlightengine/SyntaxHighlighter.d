@@ -56,6 +56,10 @@ class SyntaxHighlighter : QSyntaxHighlighter {
 								setFormat(i, 1, new QColor(0, 0, 0));
 								break;
 							default:
+								// check for words1 like "abstract" to set its format to QColor(0, 0, 255) and bold!
+								// check also for words2 like "bool" to set its format to QColor(0, 0, 255) and bold!
+								// check also for words3...and so on
+								// ...words4...
 						}
 					}
 				}
