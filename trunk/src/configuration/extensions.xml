@@ -1,4 +1,4 @@
 <extensions>
-    <ext lang="d" ext="d,di"></ext>
-    <ext lang="cpp" ext="c++,cpp,cc,h,c"></ext>
+    <ext lang="d" ext="d,di"></ext><!-- i would use conf="d" or config="d" or configuration="d" instead of lang="d" -->
+    <ext lang="cpp" ext="c++,cpp,cc,h,c"></ext><!-- same -->
 </extensions>
