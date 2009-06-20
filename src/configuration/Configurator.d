@@ -5,7 +5,7 @@
  Release:                       Initial, June 2009
  *******************************************************************************/
 
-module Configurator;
+module src.configuration.Configurator;
 
 private {
     import tango.text.xml.Document;
