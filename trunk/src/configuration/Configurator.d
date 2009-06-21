@@ -72,8 +72,8 @@ public:
 }
 
 public union Configuration {
-    bool    isNull = true;
     ConfigurationT  conf;
+    bool    isNull = true;
 }
 
 /*******************************************************************************
@@ -125,9 +125,7 @@ private:
        if there's no configuration give it the NullConf value
     */
     void getConf(Extension ext) {
-        foreach(Extension loc, char[] list; languages) {
-            if(TUtil.containsPattern(ext, list)) parseExt(loc ~ ".xml");
-        }
+        parseExt(languages[ext] ~ ".xml");
     }
 
     /*
@@ -137,6 +135,7 @@ private:
     void parseExt(char[] loc) {
         /* open and read file, set up document (xml) */
         auto text = pull(new FileHost(loc));
+
         Document!(char) doc = new Document!(char);
 
         /* parse the document before playing with it :-) */
@@ -145,29 +144,60 @@ private:
         /* parse it into the languages array */
         auto root = doc.tree;
 
-        auto conf = new ConfigurationT;
+        // some temps
+        char[] name, color, style;
+        ConfigurationT conf;
+
 
         /* do some actual parsing :-) */
-        foreach(elem; root.query["lang"]) {
-            conf.name = elem.attributes.value("name").value;
+        foreach(elem; root.query.descendant("lang")) {
+            conf = new ConfigurationT;
+            
+            foreach(elem2; elem.query.attribute("name")) {
+                conf.name = elem2.value.dup;
 
-            foreach(elem2; elem.query["keywordLists"]) {
-                foreach(elem3; elem2.query["keywords"]) {
-                    conf.keywords[elem3.attributes.value("name").value]
-                        = elem3.value;
+                debug(Configurator) {
+                    Stdout(conf.name).newline.flush;
                 }
             }
 
-            foreach(elem2; elem.query["styles"]) {
-                foreach(elem3; elem2.query["wordsStyle"]) {
-                    conf.styles[elem3.attributes.value("name").value]
-                        =   Style(
-                                    elem3.attributes.value("color").value,
-                                    elem3.attributes.value("style").value
-                            );
+            foreach(elem2; elem.query.descendant("keywordLists")) {
+                foreach(elem3; elem2.query.descendant("keywords")) {
+                    foreach(elem4; elem3.query.attribute("name")) {
+                        name = elem4.value;
+                    }
+
+                    conf.keywords[name.dup] = elem3.value.dup;
+
+                    debug(Configurator) {
+                        Stdout(conf.keywords[name]).newline.flush;
+                    }
                 }
             }
-            configurations[elem.attributes.value("name").value].conf = conf;
+
+            foreach(elem2; elem.query.descendant("styles")) {
+                foreach(elem3; elem2.query.descendant("wordsStyle")) {
+                    foreach(elem4; elem3.query.attribute("name")) {
+                        name = elem4.value;
+                    }
+
+                    foreach(elem4; elem3.query.attribute("color")) {
+                        color = elem4.value;
+                    }
+
+                    foreach(elem4; elem3.query.attribute("style")) {
+                        style = elem4.value;
+                    }
+
+                    conf.styles[name.dup] = Style(color.dup, style.dup);
+                }
+
+                debug(Configurator) {
+                    Stdout(name)("/n")(color)("/n")(style).newline.flush;
+                }
+            }
+
+            configurations[conf.name.dup] = Configuration(conf);
         }        
     }
 
@@ -207,12 +237,22 @@ public:
             foreach(elem2; elem.query.descendant("ext")) {
                 foreach(elem3; elem2.query.attribute("conf")) {
                     lang = elem3.value;
-                }
-                foreach(elem3; elem2.query.attribute("ext")) {
-                    exts = elem3.value;
+
+                    debug(Configurator) {
+                        Stdout(elem3.value).newline.flush;
+                    }
                 }
 
-                languages[lang.dup] = exts.dup;
+                foreach(elem3; elem2.query.attribute("ext")) {
+                    exts = elem3.value;
+
+                    debug(Configurator) {
+                        Stdout(elem3.value).newline.flush;
+                    }
+                }
+
+                foreach(temp; TUtil.split(exts, ","))
+                    languages[temp.dup] = lang.dup;
             }
         }
     }
@@ -223,16 +263,13 @@ public:
        and no 2 accesses on the configurations
     */
     synchronized ConfigurationT onOpen(Extension ext) {
-        Extension use;
-
-        foreach(Extension loc, char[] list; languages) {
-            if(TUtil.containsPattern(ext, list)) use = loc;
-        }
-
-        if(configurations[use].isNull)
+        try {
+            configurations[languages[ext]].conf.used++;
+        } catch {
             getConf(ext);
-        configurations[use].conf.used++;
-        return configurations[use].conf;
+            //configurations[languages[ext]].conf.used++;
+        }
+        return configurations[languages[ext]].conf;
     }
 
     /*
@@ -241,20 +278,19 @@ public:
        var is done so it can actually release mem to GC
     */
     synchronized void onClose(Extension ext) {
-        Extension use;
+        configurations[languages[ext]].conf.used--;
 
-        foreach(Extension loc, char[] list; languages) {
-            if(TUtil.containsPattern(ext, list)) use = loc;
+        if(configurations[languages[ext]].conf.used <= 0) {
+            delete configurations[languages[ext]].conf;
         }
+    }
+}
 
-        if(!configurations[use].isNull) {
-            configurations[use].conf.used--;
-
-            if(configurations[use].conf.used <= 0) {
-                // this should make the gc able to delete the ConfigurationT
-                configurations[use].conf   = null;
-                configurations[use].isNull = true;
-            }
-        }
+debug(Configurator) {
+    void main() {
+        auto man = new ConfigurationManager("extensions.xml");
+        auto conf = man.onOpen("d");
+        man.onClose("d");
+        Stdout("no problems yet?").newline.flush;
     }
 }
