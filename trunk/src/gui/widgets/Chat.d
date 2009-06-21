@@ -22,7 +22,7 @@ class Chat : QWidget {
 			
 			input = new QLineEdit();
 		
-			auto submit = new QPushButton(style.standardIcon(QStyle.SP_ArrowRight), "Send");
+			auto submit = new QPushButton("Send");
 			submit.clicked.connect(&submitClicked);
 			
 			auto hLayout = new QHBoxLayout();
