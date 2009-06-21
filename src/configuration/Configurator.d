@@ -13,6 +13,9 @@ private {
     import tango.io.vfs.model.Vfs;
     import tango.io.vfs.FileFolder;
     import TUtil = tango.text.Util;
+    debug(Configurator) {
+        import tango.io.Stdout;
+    }
 }
 
 /*******************************************************************************
@@ -133,7 +136,7 @@ private:
     */
     void parseExt(char[] loc) {
         /* open and read file, set up document (xml) */
-        auto text = pull((new FileHost(loc)).input);
+        auto text = pull(new FileHost(loc));
         Document!(char) doc = new Document!(char);
 
         /* parse the document before playing with it :-) */
@@ -172,11 +175,20 @@ private:
        pulls all of the text out this input stream
        returns the text
     */
-    char[] pull(InputStream stream) {
+    char[] pull(FileHost loc) {
         char[] ret, temp;
+        size_t loca;
 
-        for(; stream.read(temp) != IOStream.Eof;)
+        do {
+            loca = loc.input.read(temp);
             ret ~= temp;
+        } while(loca != IOStream.Eof);
+
+        debug(Configurator) {
+            Stdout(ret).newline.flush;
+        }
+
+        delete loc;
 
         return ret;
     }
@@ -184,9 +196,9 @@ private:
 public:
     /* gets master descriptor of extensions file and parses it */
     this(char[] loc) {
-        
+
         /* open and read file, set up document (xml) */
-        auto text = pull((new FileHost(loc)).input);
+        auto text = pull(new FileHost(loc));
         Document!(char) doc = new Document!(char);
 
         /* parse the document before playing with it :-) */
