@@ -1,7 +1,7 @@
 /*******************************************************************************
  Author:                        Lester L. Martin II
  Copyright:                     Lester L. Martin II and CollabEdit Project
- Liscense:                      $(GPL)
+ Liscense:                      $(GPLv1)
  Release:                       Initial, June 2009
  *******************************************************************************/
 
@@ -15,10 +15,14 @@ private {
     import TUtil = tango.text.Util;
 }
 
-/// define an extension as char[]
+/*******************************************************************************
+ define an extension as char[]
+ *******************************************************************************/
 alias char[] Extension;
 
-/// define the operations on a file
+/*******************************************************************************
+ define the operations on a file
+ *******************************************************************************/
 enum Operations {
     Open,
     Close 
@@ -69,7 +73,9 @@ public union Configuration {
     ConfigurationT  conf;
 }
 
-/// describes handlers as a type
+/*******************************************************************************
+ describes handlers as a type
+ *******************************************************************************/
 typedef ConfigurationT delegate(Extension ext)   OpenHandler;
 typedef void delegate(Extension ext)           CloseHandler;
 
@@ -102,36 +108,43 @@ Extra Information:
 public class ConfigurationManager {
 private:
     Configuration[Extension]    configurations = null;
-    // describes language by it's name... has a list of extensions as a string
-    // use something to figure out if extension (char[]) is in the string of
-    // language
+
+    /*
+       describes language by it's name... has a list of extensions as a string
+       use something to figure out if extension (char[]) is in the string of
+       language
+    */
     char[][char[]]              languages;
 
-    // should be able to get a *.xml for ext and parse it into a Configuration
-    // should store in configuration Table
-    // if there's no configuration give it the NullConf value
+    /*
+       should be able to get a *.xml for ext and parse it into a Configuration
+       should store in configuration Table
+       if there's no configuration give it the NullConf value
+    */
     void getConf(Extension ext) {
         foreach(Extension loc, char[] list; languages) {
             if(TUtil.containsPattern(ext, list)) parseExt(loc ~ ".xml");
         }
     }
 
-    // opens a language descriptor file
-    // and parses it into the configurations
+    /*
+       opens a language descriptor file
+       and parses it into the configurations
+    */
     void parseExt(char[] loc) {
-        //open and read file, set up document (xml)
+        /* open and read file, set up document (xml) */
         auto text = pull((new FileHost(loc)).input);
         Document!(char) doc = new Document!(char);
 
-        // parse the document before playing with it :-)
+        /* parse the document before playing with it :-) */
         doc.parse(text);
 
-        // parse it into the languages array
+        /* parse it into the languages array */
         auto root = doc.tree;
 
         auto conf = new ConfigurationT;
 
-        //do some actual parsing :-)
+        /* do some actual parsing :-) */
         foreach(elem; root.query["lang"]) {
             conf.name = elem.attributes.value("name").value;
 
@@ -155,8 +168,10 @@ private:
         }        
     }
 
-    // pulls all of the text out this input stream
-    // returns the text
+    /*
+       pulls all of the text out this input stream
+       returns the text
+    */
     char[] pull(InputStream stream) {
         char[] ret, temp;
 
@@ -167,20 +182,20 @@ private:
     }
 
 public:
-    // gets master descriptor of extensions file and parses it
+    /* gets master descriptor of extensions file and parses it */
     this(char[] loc) {
         
-        //open and read file, set up document (xml)
+        /* open and read file, set up document (xml) */
         auto text = pull((new FileHost(loc)).input);
         Document!(char) doc = new Document!(char);
 
-        // parse the document before playing with it :-)
+        /* parse the document before playing with it :-) */
         doc.parse(text);
 
-        // parse it into the languages array
+        /* parse it into the languages array */
         auto root = doc.tree;
 
-        // ok time for some actual parsing, hooray!
+        /* ok time for some actual parsing, hooray! */
         foreach(elem; root.query["extensions"]) {
             foreach(elem2; elem.query["ext"]) {
                 languages[elem2.attributes.value("conf").value]
@@ -222,10 +237,11 @@ public:
         if(!configurations[use].isNull) {
             configurations[use].conf.used--;
 
-            if(configurations[use].conf.used <= 0)
+            if(configurations[use].conf.used <= 0) {
                 // this should make the gc able to delete the ConfigurationT
                 configurations[use].conf   = null;
                 configurations[use].isNull = true;
+            }
         }
     }
 }
