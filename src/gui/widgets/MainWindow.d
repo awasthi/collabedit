@@ -6,6 +6,7 @@ import qt.gui.QIcon;
 import qt.gui.QLabel;
 import qt.gui.QLineEdit;
 import qt.gui.QMainWindow;
+import qt.gui.QMessageBox;
 //import src.Resource;
 import src.gui.widgets.Chat;
 import src.gui.widgets.Compiler;
@@ -52,7 +53,7 @@ class MainWindow : QMainWindow {
 			setCentralWidget(previewLabel);
 			
 			connect = new ConnectWindow(this);
-			connect.show();
+			openConnection();
 		}
 		
 	private:
@@ -70,12 +71,12 @@ class MainWindow : QMainWindow {
 		
 		void createActions() {
 			actions ~= new QAction(tr("&Open Connection"), this);
-			actions ~= new QAction(resourceManager.getIcon(ResourceManager.FILE), tr("&New"), this);
-			actions ~= new QAction(resourceManager.getIcon(ResourceManager.FLOPPY), tr("&Save"), this);
+			actions ~= new QAction(tr("&New"), this);
+			actions ~= new QAction(tr("&Save"), this);
 			actions ~= new QAction(tr("E&xit"), this);
-			actions ~= new QAction(/*resourceManager.getIcon(ResourceManager.CUT), */tr("Cu&t"), this);
-			actions ~= new QAction(/*resourceManager.getIcon(ResourceManager.COPY), */tr("&Copy"), this);
-			actions ~= new QAction(/*resourceManager.getIcon(ResourceManager.PASTE), */tr("&Paste"), this);
+			actions ~= new QAction(tr("Cu&t"), this);
+			actions ~= new QAction(tr("&Copy"), this);
+			actions ~= new QAction(tr("&Paste"), this);
 			actions ~= new QAction(tr("&About"), this);
 			
 			actions[0].setShortcut(tr("Ctrl+O"));
@@ -152,9 +153,12 @@ class MainWindow : QMainWindow {
 		}
 		
 		void createToolBars() {
-			auto bar = addToolBar(tr("File"));
-			//bar.addAction(...);
-			bar = addToolBar(tr("Edit"));
+			auto bar = addToolBar(tr("Connection"));
+			bar.addAction(actions[0]);
+			
+			bar = addToolBar(tr("File"));
+			bar.addAction(actions[1]);
+			bar.addAction(actions[2]);
 		}
 		
 		void acceptConnection() {
@@ -164,16 +168,15 @@ class MainWindow : QMainWindow {
 			 * password: password.text()
 			 */
 			connect.close();
-			setupFrontend();
+			if (!actions.length) setupFrontend();
 		}
 		
 		void rejectConnection() {
-			// rejected
 			connect.close();
 		}
 		
 		void openConnection() {
-			
+			connect.show();
 		}
 		
 		void newFile() {
@@ -197,6 +200,6 @@ class MainWindow : QMainWindow {
 		}
 		
 		void about() {
-			
+			QMessageBox.about(this, tr("About collabEdit"), tr("..."));
 		}
 }
