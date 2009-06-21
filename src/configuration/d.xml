@@ -2,7 +2,8 @@
         <keywordLists>
                 <keywords name="delimiters">" '</keywords>
                 <keywords name="operators">! ( ) ? [ ] &lt; = &gt;</keywords>
-                <keywords name="comment">/* */</keywords>
+                <keywords name="comment">/*</keywords>
+                <keywords name="endComment">*/</keywords>
                 <keywords name="commentLine">//</keywords>
                 <keywords name="words1">abstract alias align asm assert auto body break case cast catch class const continue debug default delegate delete deprecated do else enum export extern false final finally for foreach foreach_reverse function goto if import in inout interface invariant is lazy mixin module new null out override package pragma private private: protected protected: public public: return scope static struct super switch synchronized template this throw true try typedef typeid typeof union unittest version void volatile wchar while with ~this</keywords>
                 <keywords name="words2">bool byte cdouble cent cfloat char creal dchar double float idouble ifloat int ireal long real short ubyte ucent uint ulong ushort</keywords>
