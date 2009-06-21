@@ -74,6 +74,8 @@ class MainWindow : QMainWindow {
 			actions ~= new QAction(tr("&New"), this);
 			actions ~= new QAction(tr("&Save"), this);
 			actions ~= new QAction(tr("E&xit"), this);
+			actions ~= new QAction(tr("&Undo"), this);
+			actions ~= new QAction(tr("&Redo"), this);
 			actions ~= new QAction(tr("Cu&t"), this);
 			actions ~= new QAction(tr("&Copy"), this);
 			actions ~= new QAction(tr("&Paste"), this);
@@ -95,20 +97,28 @@ class MainWindow : QMainWindow {
 			actions[3].setStatusTip(tr("Exit the application"));
 			actions[3].triggered.connect(&close);
 			
-			actions[4].setShortcut(tr("Ctrl+X"));
-			actions[4].setStatusTip(tr("Cut the current selection's contents to the clipboard"));
-			actions[4].triggered.connect(&cut);
+			actions[4].setShortcut(tr("Ctrl+Z"));
+			actions[4].setStatusTip(tr("Undo last change"));
+			//actions[4].triggered.connect(&undo);
 			
-			actions[5].setShortcut(tr("Ctrl+C"));
-			actions[5].setStatusTip(tr("Copy the current selection's contents to the clipboard"));
-			actions[5].triggered.connect(&copy);
+			actions[5].setShortcut(tr("Ctrl+Y"));
+			actions[5].setStatusTip(tr("Redo last undone change"));
+			//actions[5].triggered.connect(&redo);
 			
-			actions[6].setShortcut(tr("Ctrl+V"));
-			actions[6].setStatusTip(tr("Paste the clipboard's contents into the current selection"));
-			actions[6].triggered.connect(&paste);
+			actions[6].setShortcut(tr("Ctrl+X"));
+			actions[6].setStatusTip(tr("Cut the current selection's contents to the clipboard"));
+			//actions[6].triggered.connect(&cut);
 			
-			actions[7].setStatusTip(tr("About collabEdit"));
-			actions[7].triggered.connect(&about);
+			actions[7].setShortcut(tr("Ctrl+C"));
+			actions[7].setStatusTip(tr("Copy the current selection's contents to the clipboard"));
+			//actions[7].triggered.connect(&copy);
+			
+			actions[8].setShortcut(tr("Ctrl+V"));
+			actions[8].setStatusTip(tr("Paste the clipboard's contents into the current selection"));
+			//actions[8].triggered.connect(&paste);
+			
+			actions[9].setStatusTip(tr("About collabEdit"));
+			actions[9].triggered.connect(&about);
 		}
 		
 		void setupFrontend() {
@@ -141,7 +151,10 @@ class MainWindow : QMainWindow {
 			
 			menu.addAction(actions[4]);
 			menu.addAction(actions[5]);
+			menu.addSeparator();
 			menu.addAction(actions[6]);
+			menu.addAction(actions[7]);
+			menu.addAction(actions[8]);
 			
 			menu = menuBar.addMenu(tr("&View"));
 			
@@ -149,7 +162,7 @@ class MainWindow : QMainWindow {
 			
 			menu = menuBar.addMenu(tr("&?"));
 			
-			menu.addAction(actions[7]);
+			menu.addAction(actions[9]);
 		}
 		
 		void createToolBars() {
@@ -184,18 +197,6 @@ class MainWindow : QMainWindow {
 		}
 		
 		void save() {
-			
-		}
-		
-		void cut() {
-			
-		}
-		
-		void copy() {
-			
-		}
-		
-		void paste() {
 			
 		}
 		
