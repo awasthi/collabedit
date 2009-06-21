@@ -109,6 +109,5 @@ class MainWindow : QMainWindow {
 		void rejectConnection() {
 			// rejected
 			connect.close();
-			setupFrontend();
 		}
 }
