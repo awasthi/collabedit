@@ -1,0 +1,21 @@
+EDITOR OPTIMIZATIONS 
+
+if you can, since the event function is going to be called a lot
+move as many of it's variables to a place where they will be permanently allocated....
+this means you won't have to make an allocation for every event loop
+which will make the event loop slightly faster
+the less variables you use inside of loops (and can move outside to where they won't  
+be allocated every time, like the private section of your class, the more speedy the code can be....
+the highlighting loop is suboptimal... it iterates over the entire document... it should only iterate over lines that are edited
+or if you're going keep it the way it is atm, it needs to be moved into to another thread
+the highlighter only has to make one complete pass (on doc load) then it can do it line by line
+making it like way faster 
+
+There should be one editor open per syntax type... + one editor open for the NULL Syntax.
+
+Now some general optmizations
+
+Use as little memory as possible as long as it doesn't mess with speed
+value speed over memory except in outrageous mem usage cases
+any variable that is in an event loop will be alocated every time the even
+is called so move it into the class so no allocations of it take place
