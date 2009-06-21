@@ -179,16 +179,11 @@ private:
         char[] ret, temp;
         size_t loca;
 
-        do {
-            loca = loc.input.read(temp);
-            ret ~= temp;
-        } while(loca != IOStream.Eof);
+        auto inp = loc.input;
 
-        debug(Configurator) {
-            Stdout(ret).newline.flush;
-        }
+        ret = cast(char[])inp.load();
 
-        delete loc;
+        inp.close;
 
         return ret;
     }
@@ -204,14 +199,20 @@ public:
         /* parse the document before playing with it :-) */
         doc.parse(text);
 
-        /* parse it into the languages array */
-        auto root = doc.tree;
+        /* temp vars */
+        char[] lang, exts;
 
-        /* ok time for some actual parsing, hooray! */
-        foreach(elem; root.query["extensions"]) {
-            foreach(elem2; elem.query["ext"]) {
-                languages[elem2.attributes.value("conf").value]
-                    = elem2.attributes.value("ext").value;
+        /* parse it into the languages array */
+        foreach(elem; doc.query.descendant) {
+            foreach(elem2; elem.query.descendant("ext")) {
+                foreach(elem3; elem2.query.attribute("conf")) {
+                    lang = elem3.value;
+                }
+                foreach(elem3; elem2.query.attribute("ext")) {
+                    exts = elem3.value;
+                }
+
+                languages[lang.dup] = exts.dup;
             }
         }
     }
