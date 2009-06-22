@@ -10,7 +10,6 @@ class TabWidget : QTabWidget {
 			setTabsClosable(true);
 			
 			auto editorManager = new EditorManager();
-			addTab(editorManager.get(Editor_Syntax.PlainText), "Sample PlainText Editor");
-			addTab(editorManager.get(Editor_Syntax.D), "Sample D Editor");
+			addTab(editorManager.get(Editor_Syntax.PlainText), "Sample Editor");
 		}
 }
