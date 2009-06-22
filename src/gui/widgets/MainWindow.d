@@ -7,11 +7,9 @@ import qt.gui.QLabel;
 import qt.gui.QLineEdit;
 import qt.gui.QMainWindow;
 import qt.gui.QMessageBox;
-//import src.Resource;
 import src.gui.widgets.Chat;
 import src.gui.widgets.Compiler;
 import src.gui.widgets.ConnectWindow;
-import src.editor.Editor;
 import src.gui.widgets.ProjectTree;
 import src.gui.widgets.TabWidget;
 import src.gui.widgets.UserList;
@@ -126,8 +124,6 @@ class MainWindow : QMainWindow {
 			createActions();
 			createMenus();
 			createToolBars();
-			
-			new Editor();
 			
 			setCentralWidget(tabWidget);
 			createDockWidgets();
