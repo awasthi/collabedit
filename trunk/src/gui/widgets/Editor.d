@@ -22,7 +22,7 @@ class EditorManager {
 		}
 		
 		void setText(int syntax, char[] text) {
-			editors[syntax].setText(text);
+			editors[syntax].setPlainText(text);
 		}
 		
 		Editor get(int syntax) {
@@ -75,7 +75,7 @@ class Editor : QPlainTextEdit {
 				digits++;
 			}
 			
-			return 60 + fontMetrics.width("9") * digits;
+			return 29 + fontMetrics.width("9") * digits;
 		}
 		
 		void updateInfoAreaWidth(int newBlockCount) {
@@ -111,10 +111,13 @@ class Editor : QPlainTextEdit {
 				if (block.isVisible && bottom >= event.rect.top) {
 					char[] number = Integer.toString(blockNumber + 1);
 					
-					p.drawText(3, top, 16, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "c");
-					p.drawText(22, top, 16, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "d");
-					p.drawText(41, top, 16, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "b");
-					p.drawText(60, top, infoArea.width - 60, fontMetrics.height, Qt.AlignmentFlag.AlignRight, number);
+					/*
+					 * first drawn area displaying debug/bookmark information but also current block
+					 * second drawn area displaying line numbers
+					 * 
+					 */
+					p.drawText(0, top, 12, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "db");
+					p.drawText(13, top, infoArea.width - 21, fontMetrics.height, Qt.AlignmentFlag.AlignRight, number);
 				}
 				
 				block = block.next();
