@@ -26,7 +26,7 @@ class EditorManager {
 		}
 }
 
-class LineNumberArea : QWidget {
+class InfoArea : QWidget {
 	private:
 		Editor editor;
 	
@@ -37,32 +37,32 @@ class LineNumberArea : QWidget {
 		}
 		
 		QSize sizeHint() {
-			return QSize(editor.lineNumberAreaWidth(), 0);
+			return QSize(editor.infoAreaWidth(), 0);
 		}
 	
 	protected:
 		void paintEvent(QPaintEvent event) {
-			editor.lineNumberAreaPaintEvent(event);
+			editor.infoAreaPaintEvent(event);
 		}
 }
 
 class Editor : QPlainTextEdit {
 	private:
-		LineNumberArea lineNumberArea;
+		InfoArea infoArea;
 	
 	public:
 		this() {
-			lineNumberArea = new LineNumberArea(this);
+			infoArea = new InfoArea(this);
 			
-			blockCountChanged.connect(&updateLineNumberAreaWidth);
-			updateRequest.connect(&updateLineNumberArea);
-			updateLineNumberAreaWidth(0);
+			blockCountChanged.connect(&updateInfoAreaWidth);
+			updateRequest.connect(&updateInfoArea);
+			updateInfoAreaWidth(0);
 			
 			verticalScrollBar.valueChanged.connect(&update);
 			textChanged.connect(&update);
 		}
 		
-		int lineNumberAreaWidth() {
+		int infoAreaWidth() {
 			int digits = 1;
 			int max = max(1, blockCount());
 			
@@ -71,32 +71,32 @@ class Editor : QPlainTextEdit {
 				digits++;
 			}
 			
-			return 3 + fontMetrics.width("9") * digits;
+			return 60 + fontMetrics.width("9") * digits;
 		}
 		
-		void updateLineNumberAreaWidth(int newBlockCount) {
-			setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
+		void updateInfoAreaWidth(int newBlockCount) {
+			setViewportMargins(infoAreaWidth(), 0, 0, 0);
 		}
 		
-		void updateLineNumberArea(QRect rec, int dy) {
+		void updateInfoArea(QRect rec, int dy) {
 			if (dy > 0)
-				lineNumberArea.scroll(0, dy);
+				infoArea.scroll(0, dy);
 			else
-				lineNumberArea.update(0, rect.y, lineNumberArea.width, rect.height);
+				infoArea.update(0, rect.y, infoArea.width, rect.height);
 			
 			if (rect.contains(viewport.rect()))
-				updateLineNumberAreaWidth(0);
+				updateInfoAreaWidth(0);
 		}
 		
 		void resizeEvent(QResizeEvent e) {
 			super.resizeEvent(e);
 			
 			auto cr = contentsRect();
-			lineNumberArea.setGeometry(QRect(cr.left, cr.top, lineNumberAreaWidth(), cr.height));
+			infoArea.setGeometry(QRect(cr.left, cr.top, infoAreaWidth(), cr.height));
 		}
 		
-		void lineNumberAreaPaintEvent(QPaintEvent event) {
-			scope p = new QPainter(lineNumberArea);
+		void infoAreaPaintEvent(QPaintEvent event) {
+			scope p = new QPainter(infoArea);
 			
 			QTextBlock block = firstVisibleBlock();
 			int blockNumber = block.blockNumber();
@@ -106,7 +106,11 @@ class Editor : QPlainTextEdit {
 			while (block.isValid && top <= event.rect.bottom) {
 				if (block.isVisible && bottom >= event.rect.top) {
 					char[] number = Integer.toString(blockNumber + 1);
-					p.drawText(0, top, lineNumberArea.width, fontMetrics.height, Qt.AlignmentFlag.AlignRight, number);
+					
+					p.drawText(3, top, 16, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "c");
+					p.drawText(22, top, 16, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "d");
+					p.drawText(41, top, 16, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "b");
+					p.drawText(60, top, infoArea.width - 60, fontMetrics.height, Qt.AlignmentFlag.AlignRight, number);
 				}
 				
 				block = block.next();
