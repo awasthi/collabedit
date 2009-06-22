@@ -13,6 +13,8 @@ private {
     import tango.io.vfs.model.Vfs;
     import tango.io.vfs.FileFolder;
     import TUtil = tango.text.Util;
+    import tango.util.Convert;
+    import qt.gui.QColor;
     debug(Configurator) {
         import tango.io.Stdout;
     }
@@ -41,7 +43,7 @@ enum Operations {
         something to do with fonts?
  *******************************************************************************/
 public struct Style {
-    char[] color;
+    QColor[] color;
     char[] style;
 }
 
@@ -147,6 +149,8 @@ private:
 
         // some temps
         char[] name, color, style;
+        int[3] temps;
+        ubyte index = 0;
         ConfigurationT conf;
 
 
@@ -183,7 +187,10 @@ private:
                     }
 
                     foreach(elem4; elem3.query.attribute("color")) {
-                        color = elem4.value;
+                        foreach(num; split(elem4.value, ","))
+                            temps[index++] = Convert!(int)(num);
+
+                        conf.color = new QColor(temps[0], temps[1], temps[2]);
                     }
 
                     foreach(elem4; elem3.query.attribute("style")) {
