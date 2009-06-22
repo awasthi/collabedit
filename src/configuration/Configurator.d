@@ -118,6 +118,7 @@ private:
        language
     */
     char[][char[]]              languages;
+    char[][]                    langPoss;
 
     /*
        should be able to get a *.xml for ext and parse it into a Configuration
@@ -253,6 +254,8 @@ public:
 
                 foreach(temp; TUtil.split(exts, ","))
                     languages[temp.dup] = lang.dup;
+
+                langPoss[] ~= lang.dup;
             }
         }
     }
@@ -283,6 +286,10 @@ public:
         if(configurations[languages[ext]].conf.used <= 0) {
             delete configurations[languages[ext]].conf;
         }
+    }
+
+    char[][] languages() {
+        return langPoss;
     }
 }
 
