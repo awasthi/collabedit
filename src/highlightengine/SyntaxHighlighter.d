@@ -19,15 +19,7 @@ class SyntaxHighlighter : QSyntaxHighlighter {
 			super(editor.document);
 		}
 		
-		/*
-		 * @params
-		 * text - provides current text from editor's document
-		 * 
-		 */
 		void highlightBlock(char[] text) {
-			/*
-			 * put every char into tokenList
-			 */
 			auto tokenList = new TokenList(text);
 			int state = previousBlockState();
 			int start = 0;
