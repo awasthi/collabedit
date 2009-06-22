@@ -2,7 +2,6 @@ module src.gui.widgets.TabWidget;
 
 import qt.gui.QTabWidget;
 import src.gui.widgets.Editor;
-import src.highlightengine.SyntaxHighlighter;
 
 class TabWidget : QTabWidget {
 	public:
