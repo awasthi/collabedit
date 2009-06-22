@@ -21,6 +21,10 @@ class EditorManager {
 			}
 		}
 		
+		void setText(int syntax, char[] text) {
+			editors[syntax].setText(text);
+		}
+		
 		Editor get(int syntax) {
 			return editors[syntax];
 		}
