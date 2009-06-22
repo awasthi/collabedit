@@ -1,8 +1,6 @@
 module src.gui.widgets.Editor;
 
 import qt.gui.QTextEdit;
-import tango.io.FilePath;
-import tango.io.device.File;
 import tango.math.Math : round;
 import Integer = tango.text.convert.Integer : toString;
 import src.highlightengine.SyntaxHighlighter;
@@ -35,10 +33,6 @@ class Editor : QTextEdit {
 			setViewportMargins(50, 0, 0, 0);
 			verticalScrollBar.valueChanged.connect(&update);
 			textChanged.connect(&update);
-		}
-		
-		void setFile(char[] fileName) {
-			setText(cast(char[]) File.get(fileName));
 		}
 		
 		bool event(QEvent event) {
