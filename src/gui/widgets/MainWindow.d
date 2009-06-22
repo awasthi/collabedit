@@ -11,7 +11,7 @@ import qt.gui.QMessageBox;
 import src.gui.widgets.Chat;
 import src.gui.widgets.Compiler;
 import src.gui.widgets.ConnectWindow;
-import src.gui.widgets.Editors;
+import src.editor.Editor;
 import src.gui.widgets.ProjectTree;
 import src.gui.widgets.TabWidget;
 import src.gui.widgets.UserList;
@@ -127,7 +127,7 @@ class MainWindow : QMainWindow {
 			createMenus();
 			createToolBars();
 			
-			new Editors();
+			new Editor();
 			
 			setCentralWidget(tabWidget);
 			createDockWidgets();

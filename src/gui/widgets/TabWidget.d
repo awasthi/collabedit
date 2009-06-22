@@ -1,8 +1,8 @@
 module src.gui.widgets.TabWidget;
 
 import qt.gui.QTabWidget;
-import src.gui.widgets.Editor;
-import src.highlightengine.SyntaxHighlighter;
+import src.editor.Editor;
+import src.editor.highlightengine.SyntaxHighlighter;
 
 class TabWidget : QTabWidget {
 	public:
