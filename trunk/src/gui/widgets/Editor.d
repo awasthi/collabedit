@@ -116,7 +116,7 @@ class Editor : QPlainTextEdit {
 					 * second drawn area displaying line numbers
 					 * 
 					 */
-					p.drawText(0, top, 12, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "db");
+					//p.drawText(0, top, 12, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "db");
 					p.drawText(13, top, infoArea.width - 21, fontMetrics.height, Qt.AlignmentFlag.AlignRight, number);
 				}
 				
