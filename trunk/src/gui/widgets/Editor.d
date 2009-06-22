@@ -58,7 +58,7 @@ class Editor : QPlainTextEdit {
 			updateRequest.connect(&updateInfoArea);
 			updateInfoAreaWidth(0);
 			
-			verticalScrollBar.valueChanged.connect(&update);
+			//verticalScrollBar.valueChanged.connect(&update);
 			textChanged.connect(&update);
 		}
 		
