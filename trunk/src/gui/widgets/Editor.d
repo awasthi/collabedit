@@ -102,7 +102,7 @@ class SyntaxHighlighter : QSyntaxHighlighter {
             for (int i = 0; i < text.length; i++) {
                 if(len == i) len--;
                 if (contains(conf.keywords["delimiters"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["deliminers"]);
+                    setFormat(start, len, conf.styles["deliminer"]);
                     start = i;
                 } else if (contains(conf.keywords["operators"], mid(text, start, len))) {
                     setFormat(start, len, conf.styles["operator"]);
