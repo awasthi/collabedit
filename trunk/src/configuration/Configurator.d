@@ -43,7 +43,7 @@ enum Operations {
         something to do with fonts?
  *******************************************************************************/
 public struct Style {
-    QColor[] color;
+    QColor color;
     char[] style;
 }
 
@@ -148,7 +148,8 @@ private:
         auto root = doc.tree;
 
         // some temps
-        char[] name, color, style;
+        char[] name, style;
+        QColor color;
         int[3] temps;
         ubyte index = 0;
         ConfigurationT conf;
@@ -187,17 +188,17 @@ private:
                     }
 
                     foreach(elem4; elem3.query.attribute("color")) {
-                        foreach(num; split(elem4.value, ","))
-                            temps[index++] = Convert!(int)(num);
+                        foreach(num; TUtil.split(elem4.value, ","))
+                            temps[index++] = to!(int)(num);
 
-                        conf.color = new QColor(temps[0], temps[1], temps[2]);
+                        color = new QColor(temps[0], temps[1], temps[2]);
                     }
 
                     foreach(elem4; elem3.query.attribute("style")) {
                         style = elem4.value;
                     }
 
-                    conf.styles[name.dup] = Style(color.dup, style.dup);
+                    conf.styles[name.dup] = Style(color, style.dup);
                 }
 
                 debug(Configurator) {
@@ -262,7 +263,7 @@ public:
                 foreach(temp; TUtil.split(exts, ","))
                     languages[temp.dup] = lang.dup;
 
-                langPoss[] ~= lang.dup;
+                langPoss ~= [lang.dup];
             }
         }
     }
@@ -277,7 +278,7 @@ public:
             configurations[languages[ext]].conf.used++;
         } catch {
             getConf(ext);
-            //configurations[languages[ext]].conf.used++;
+            configurations[languages[ext]].conf.used++;
         }
         return configurations[languages[ext]].conf;
     }
@@ -295,8 +296,19 @@ public:
         }
     }
 
-    char[][] languages() {
+    char[][] Languages() {
         return langPoss;
+    }
+
+     ConfigurationT getConfiguration(Extension ext) {
+        try {
+            configurations[languages[ext]].conf.used++;
+        } catch {
+            getConf(ext);
+            configurations[languages[ext]].conf.used++;
+        }
+        configurations[languages[ext]].conf.used--;
+        return configurations[languages[ext]].conf;
     }
 }
 
