@@ -1,13 +1,15 @@
 module src.gui.widgets.Editor;
 
 import qt.gui.QPlainTextEdit;
+import qt.gui.QSyntaxHighlighter;
+import src.configuration.Configurator;
+import tango.core.Array : contains;
 import tango.math.Math : max;
 import Integer = tango.text.convert.Integer : toString;
-import src.configuration.Configurator;
 
 class EditorManager {
 	private:
-		Editor[char[]] editors = null;
+		CodeEditor[char[]] editors = null;
         ConfigurationManager confMan;
 	
 	public:
@@ -16,54 +18,132 @@ class EditorManager {
             confMan = new ConfigurationManager("lang/extensions.xml");
 
             /* Create plain text editor */
-            editors["plaintext"] = new Editor(null);
+            editors["plaintext"] = new CodeEditor(null);
 		}
 		
 		void setText(char[] ext, char[] text) {
 			editors[confMan.getConfiguration(ext).name].setPlainText(text);
 		}
 		
-		Editor get(char[] ext) {
+		CodeEditor get(char[] ext) {
             try {
                 if(editors[confMan.getConfiguration(ext).name] is null)
-                    editors[confMan.getConfiguration(ext).name] = new Editor(confMan.onOpen(ext));
+                    editors[confMan.getConfiguration(ext).name] = new CodeEditor(confMan.onOpen(ext));
             }
             catch {
-                editors[confMan.getConfiguration(ext).name] = new Editor(confMan.onOpen(ext));
+                editors[confMan.getConfiguration(ext).name] = new CodeEditor(confMan.onOpen(ext));
             }
 			return editors[confMan.getConfiguration(ext).name];
 		}
 }
 
-class InfoArea : QWidget {
+class QPanel : QWidget {
 	private:
-		Editor editor;
+		CodeEditor editor;
 	
 	public:
-		this(Editor editor) {
+		this(CodeEditor editor) {
 			this.editor = editor;
 			setParent(editor);
 		}
-		
+
 		QSize sizeHint() {
-			return QSize(editor.infoAreaWidth(), 0);
+			return QSize(editor.panelWidth(), 0);
 		}
 	
 	protected:
 		void paintEvent(QPaintEvent event) {
-			editor.infoAreaPaintEvent(event);
+			editor.panelPaintEvent(event);
 		}
 }
 
-class Editor : QPlainTextEdit {
+class SyntaxHighlighter : QSyntaxHighlighter {
 	private:
-		InfoArea infoArea;
-        ConfigurationT conf;
+		ConfigurationT conf;
+		QTextDocument parent;
+		
+		enum State {
+			NormalState = -1,
+			InsideComment,
+			InsideDeliminer
+		}
+	
+	public:
+		this(ConfigurationT conf, QTextDocument parent) {
+			this.conf = conf;
+			this.parent = parent;
+			
+			super(parent);
+		}
+	
+	private:
+		char[] mid(char[] source, uint index, uint len) {
+			uint slen = source.length;
+			
+			if (slen == 0 || index >= slen)
+				return "";
+			
+			if (len > slen - index)
+				len = slen - index;
+			
+			if (index == 0 && len == slen)
+				return source;
+			
+			return source[index .. index + len];
+		}
+	
+	protected:
+		void highlightBlock(char[] text) {
+			int state = previousBlockState();
+			int start = 0;
+			int len = 0;
+			
+			for (int i = 0; i < text.length; i++) {
+				if (contains(conf.keywords["delimiters"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["deliminers"]);
+					start = i;
+				} else if (contains(conf.keywords["operators"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["operator"]);
+					start = i;
+				} else if (contains(conf.keywords["comment"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["comment"]);
+					start = i;
+				} else if (contains(conf.keywords["endComment"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["comment"]);
+					start = i;
+				} else if (contains(conf.keywords["commentLine"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["commentLine"]);
+					start = i;
+				} else if (contains(conf.keywords["words1"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["words1"]);
+					start = i;
+				} else if (contains(conf.keywords["words2"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["words2"]);
+					start = i;
+				} else if (contains(conf.keywords["words3"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["words3"]);
+					start = i;
+				} else if (contains(conf.keywords["words4"], mid(text, start, len))) {
+					setFormat(start, len, conf.styles["words4"]);
+					start = i;
+				} else {
+					start++;
+				}
+			}
+			
+			setCurrentBlockState(state);
+		}
+}
+
+class CodeEditor : QPlainTextEdit {
+	private:
+		QPanel panel;
+        SyntaxHighlighter highlighter;
 	
 	public:
 		this(ConfigurationT t) {
-            conf = t;
-			infoArea = new InfoArea(this);
+			panel = new QPanel(this);
+			highlighter = new SyntaxHighlighter(t, document());
 			
 			blockCountChanged.connect(&updateInfoAreaWidth);
 			updateRequest.connect(&updateInfoArea);
@@ -73,7 +153,7 @@ class Editor : QPlainTextEdit {
 			textChanged.connect(&update);
 		}
 		
-		int infoAreaWidth() {
+		int panelWidth() {
 			int digits = 1;
 			int max = max(1, blockCount());
 			
@@ -85,29 +165,29 @@ class Editor : QPlainTextEdit {
 			return 29 + fontMetrics.width("9") * digits;
 		}
 		
-		void updateInfoAreaWidth(int newBlockCount) {
-			setViewportMargins(infoAreaWidth(), 0, 0, 0);
+		void updatePanelWidth(int newBlockCount) {
+			setViewportMargins(panelWidth(), 0, 0, 0);
 		}
 		
-		void updateInfoArea(QRect rec, int dy) {
+		void updatePanel(QRect rec, int dy) {
 			if (dy > 0)
-				infoArea.scroll(0, dy);
+				panel.scroll(0, dy);
 			else
-				infoArea.update(0, rect.y, infoArea.width, rect.height);
+				panel.update(0, rect.y, panel.width, rect.height);
 			
 			if (rect.contains(viewport.rect()))
-				updateInfoAreaWidth(0);
+				updatePanelWidth(0);
 		}
 		
 		void resizeEvent(QResizeEvent e) {
 			super.resizeEvent(e);
 			
 			auto cr = contentsRect();
-			infoArea.setGeometry(QRect(cr.left, cr.top, infoAreaWidth(), cr.height));
+			panel.setGeometry(QRect(cr.left, cr.top, panelWidth(), cr.height));
 		}
 		
-		void infoAreaPaintEvent(QPaintEvent event) {
-			scope p = new QPainter(infoArea);
+		void panelPaintEvent(QPaintEvent event) {
+			scope p = new QPainter(panel);
 			
 			QTextBlock block = firstVisibleBlock();
 			int blockNumber = block.blockNumber();
@@ -116,15 +196,13 @@ class Editor : QPlainTextEdit {
 			
 			while (block.isValid && top <= event.rect.bottom) {
 				if (block.isVisible && bottom >= event.rect.top) {
-					char[] number = Integer.toString(blockNumber + 1);
-					
 					/*
 					 * first drawn area displaying debug/bookmark information but also current block
 					 * second drawn area displaying line numbers
 					 * 
 					 */
 					//p.drawText(0, top, 12, fontMetrics.height, Qt.AlignmentFlag.AlignCenter, "db");
-					p.drawText(13, top, infoArea.width - 21, fontMetrics.height, Qt.AlignmentFlag.AlignRight, number);
+					p.drawText(13, top, panel.width - 21, fontMetrics.height, Qt.AlignmentFlag.AlignRight, Integer.toString(blockNumber + 1));
 				}
 				
 				block = block.next();
