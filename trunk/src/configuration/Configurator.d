@@ -150,7 +150,7 @@ private:
         char[] name, style;
         QColor color;
         int[3] temps;
-        ubyte index = 0;
+        int index = 0;
         ConfigurationT conf;
 
 
@@ -187,10 +187,10 @@ private:
                     }
 
                     foreach(elem4; elem3.query.attribute("color")) {
-                        foreach(num; TUtil.split(elem4.value, ","))
-                            temps[index++] = to!(int)(num);
+                        char[][3] thin = TUtil.split(elem4.value, ",");
+                        //temps = [to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2])];
 
-                        color = new QColor(temps[0], temps[1], temps[2]);
+                        color = new QColor(to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2]));
                     }
 
                     foreach(elem4; elem3.query.attribute("style")) {
@@ -312,10 +312,10 @@ public:
 }
 
 debug(Configurator) {
-    void main() {
+    /*void main() {
         auto man = new ConfigurationManager("extensions.xml");
         auto conf = man.onOpen("d");
         man.onClose("d");
         Stdout("no problems yet?").newline.flush;
-    }
+    }*/
 }
