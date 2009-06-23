@@ -3,30 +3,30 @@ module src.gui.widgets.Editor;
 import qt.gui.QPlainTextEdit;
 import tango.math.Math : max;
 import Integer = tango.text.convert.Integer : toString;
-
-static enum Editor_Syntax {
-	PlainText,
-	D
-}
+import src.configuration.Configurator;
 
 class EditorManager {
 	private:
-		Editor[] editors;
+		Editor[char[]] editors = null;
+        ConfigurationManager confMan;
 	
 	public:
 		this() {
-			for (int i = 0; i < Editor_Syntax.sizeof; i++) {
-				editors ~= new Editor();
-				//new SyntaxHighlighter(i, editors[i]);
-			}
+            /* Init Configuration manager */
+            confMan = new ConfigurationManager("extensions.xml");
+
+            /* Create plain text editor */
+            editors["plaintext"] = new Editor(null);
 		}
 		
-		void setText(int syntax, char[] text) {
-			editors[syntax].setPlainText(text);
+		void setText(char[] ext, char[] text) {
+			editors[confMan.getConfiguration(ext).name].setPlainText(text);
 		}
 		
-		Editor get(int syntax) {
-			return editors[syntax];
+		Editor get(char[] ext) {
+            if(editors[confMan.getConfiguration(ext).name] is null)
+                editors[confMan.getConfiguration(ext).name] = new Editor(confMan.onOpen(ext));
+			return editors[confMan.getConfiguration(ext).name];
 		}
 }
 
@@ -53,9 +53,11 @@ class InfoArea : QWidget {
 class Editor : QPlainTextEdit {
 	private:
 		InfoArea infoArea;
+        ConfigurationT conf;
 	
 	public:
-		this() {
+		this(ConfigurationT t) {
+            conf = t;
 			infoArea = new InfoArea(this);
 			
 			blockCountChanged.connect(&updateInfoAreaWidth);
