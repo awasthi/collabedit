@@ -127,7 +127,7 @@ private:
        if there's no configuration give it the NullConf value
     */
     void getConf(Extension ext) {
-        parseExt(languages[ext] ~ ".xml");
+        parseExt("lang/" ~ languages[ext] ~ ".xml");
     }
 
     /*
