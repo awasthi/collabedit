@@ -15,6 +15,9 @@ private {
     import TUtil = tango.text.Util;
     import tango.util.Convert;
     import qt.gui.QColor;
+    import qt.gui.QBrush;
+    import qt.gui.QTextCharFormat;
+    import qt.gui.QTextCharFormat_enum;
     debug(Configurator) {
         import tango.io.Stdout;
     }
@@ -31,20 +34,6 @@ alias char[] Extension;
 enum Operations {
     Open,
     Close 
-}
-
-/*******************************************************************************
- Describes an entire style
-
- Members:
-    color; the color of this style
-
-    style; I don't understand this part as of yet? Might have
-        something to do with fonts?
- *******************************************************************************/
-public struct Style {
-    QColor color;
-    char[] style;
 }
 
 /*******************************************************************************
@@ -69,7 +58,7 @@ public class ConfigurationT {
 public:
     char[]          name;
     char[][char[]]  keywords;
-    Style[char[]]   styles;
+    QTextCharFormat[char[]]   styles;
     ulong           used;
 }
 
@@ -147,10 +136,8 @@ private:
         auto root = doc.tree;
 
         // some temps
-        char[] name, style;
-        QColor color;
-        int[3] temps;
-        int index = 0;
+        char[] name;
+        QTextCharFormat format;
         ConfigurationT conf;
 
 
@@ -182,6 +169,8 @@ private:
 
             foreach(elem2; elem.query.descendant("styles")) {
                 foreach(elem3; elem2.query.descendant("wordsStyle")) {
+                    format = new QTextCharFormat();
+
                     foreach(elem4; elem3.query.attribute("name")) {
                         name = elem4.value;
                     }
@@ -190,18 +179,26 @@ private:
                         char[][3] thin = TUtil.split(elem4.value, ",");
                         //temps = [to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2])];
 
-                        color = new QColor(to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2]));
+                        format.setForeground(new QBrush(new QColor(to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2]))));
                     }
 
                     foreach(elem4; elem3.query.attribute("style")) {
-                        style = elem4.value;
+                        switch(elem4.value) {
+                            case "1":
+                                format.setFontWeight(QFont.Bold);
+                                break;
+                            case "2":
+                                 format.setFontItalic(true);
+                                break;
+                            case "3":
+                                format.setFontUnderline(true);
+                                break;
+                            default:
+                                break;
+                        }
                     }
 
-                    conf.styles[name.dup] = Style(color, style.dup);
-                }
-
-                debug(Configurator) {
-                    Stdout(name)("/n")(color)("/n")(style).newline.flush;
+                    conf.styles[name.dup] = format;
                 }
             }
 
