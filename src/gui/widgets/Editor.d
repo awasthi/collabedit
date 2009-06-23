@@ -13,7 +13,7 @@ class EditorManager {
 	public:
 		this() {
             /* Init Configuration manager */
-            confMan = new ConfigurationManager("extensions.xml");
+            confMan = new ConfigurationManager("lang/extensions.xml");
 
             /* Create plain text editor */
             editors["plaintext"] = new Editor(null);
