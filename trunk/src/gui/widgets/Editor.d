@@ -2,7 +2,7 @@ module src.gui.widgets.Editor;
 
 import qt.gui.QPlainTextEdit;
 import qt.gui.QSyntaxHighlighter;
-import src.configuration.Configurator;
+import src.Configurator;
 import tango.core.Array : contains;
 import tango.math.Math : max;
 import tango.io.Stdout;
@@ -16,7 +16,7 @@ class EditorManager {
     public:
         this() {
             /* Init Configuration manager */
-            confMan = new ConfigurationManager("lang/extensions.xml");
+            confMan = new ConfigurationManager("syntax/extensions.xml");
 
             /* Create plain text editor */
             editors["plaintext"] = new CodeEditor(null);
