@@ -199,6 +199,10 @@ private:
                     }
 
                     conf.styles[name.dup] = format;
+
+                    debug(Configurator) {
+                        Stdout(name).newline.flush;
+                    }
                 }
             }
 
