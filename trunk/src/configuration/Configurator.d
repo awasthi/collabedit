@@ -75,7 +75,6 @@ public:
 
 public union Configuration {
     ConfigurationT  conf;
-    bool    isNull = true;
 }
 
 /*******************************************************************************
