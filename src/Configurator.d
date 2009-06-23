@@ -5,7 +5,7 @@
  Release:                       Initial, June 2009
  *******************************************************************************/
 
-module src.configuration.Configurator;
+module src.Configurator;
 
 private {
     import tango.text.xml.Document;
@@ -116,7 +116,7 @@ private:
        if there's no configuration give it the NullConf value
     */
     void getConf(Extension ext) {
-        parseExt("lang/" ~ languages[ext] ~ ".xml");
+        parseExt("syntax/" ~ languages[ext] ~ ".xml");
     }
 
     /*
