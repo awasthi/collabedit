@@ -162,7 +162,7 @@ private:
                     conf.keywords[name.dup] = elem3.value.dup;
 
                     debug(Configurator) {
-                        Stdout(conf.keywords[name]).newline.flush;
+                        Stdout(name)('=')(conf.keywords[name]).newline.flush;
                     }
                 }
             }
