@@ -24,8 +24,13 @@ class EditorManager {
 		}
 		
 		Editor get(char[] ext) {
-            if(editors[confMan.getConfiguration(ext).name] is null)
+            try {
+                if(editors[confMan.getConfiguration(ext).name] is null)
+                    editors[confMan.getConfiguration(ext).name] = new Editor(confMan.onOpen(ext));
+            }
+            catch {
                 editors[confMan.getConfiguration(ext).name] = new Editor(confMan.onOpen(ext));
+            }
 			return editors[confMan.getConfiguration(ext).name];
 		}
 }
