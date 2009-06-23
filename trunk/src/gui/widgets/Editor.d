@@ -100,8 +100,22 @@ class SyntaxHighlighter : QSyntaxHighlighter {
             int len = 0;
 
             for (int i = 0; i < text.length; i++) {
-                if(len == i) len--;
-                if (contains(conf.keywords["delimiters"], mid(text, start, len))) {
+            	switch (text[i]) {
+            		case '0':
+            		case '1':
+            		case '2':
+            		case '3':
+            		case '4':
+            		case '5':
+            		case '6':
+            		case '7':
+            		case '8':
+            		case '9':
+            			setFormat(i, 1, conf.styles["number"]);
+            			break;
+            		default:
+            	}
+                /*if (contains(conf.keywords["delimiters"], mid(text, start, len))) {
                     setFormat(start, len, conf.styles["deliminer"]);
                     start = i;
                 } else if (contains(conf.keywords["operators"], mid(text, start, len))) {
@@ -130,7 +144,7 @@ class SyntaxHighlighter : QSyntaxHighlighter {
                     start = i;
                 } else {
                     start++;
-                }
+                }*/
             }
 
             setCurrentBlockState(state);
