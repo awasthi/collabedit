@@ -79,18 +79,18 @@ class SyntaxHighlighter : QSyntaxHighlighter {
     
     protected:
         void highlightBlock(char[] text) {
-                foreach(pair1; conf.pair) {
-                    foreach(patt; pair1.pattern) {
-                        int index = patt.indexIn(text);
-                        Stdout(patt.pattern).newline.flush;
-                        while(index >= 0){
-                                int length = patt.matchedLength();
-                                Stdout.formatln("rule found at pos {} with length {}", index, length);
-                                setFormat(index - 1, length, new QColor(0, 0, 255));
-                                index = patt.indexIn(text, index + length);
-                        }
+            foreach(pair1; conf.pair) {
+                foreach(patt; pair1.pattern) {
+                    int index = patt.indexIn(text);
+                    Stdout(patt.pattern).newline.flush;
+                    while(index >= 0) {
+                        int length = patt.matchedLength();
+                        Stdout.formatln("rule found at pos {} with length {}", index, length);
+                        setFormat(index - 1, length, new QColor(0, 0, 255));
+                        index = patt.indexIn(text, index + length);
                     }
                 }
+            }
         }
 }
 
