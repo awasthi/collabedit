@@ -1,6 +1,6 @@
 <lang name="d">
 	<syntax name="default" color="0,0,0" style="none" />
-	<syntax name="numbers" color="217,0,108" style="none" />
+	<syntax name="numbers" color="217,0,108" style="none">\b0\b \b1\b \b2\b \b3\b \b4\b \b5\b \b6\b \b7\b \b8\b \b9\b</syntax>
 	<syntax name="deliminers" color="175,43,255" style="none">\b"\b \b'\b</syntax>
 	<syntax name="multiLineComment" color="0,128,0" style="none">\b/*\b \b*/\b</syntax>
 	<syntax name="numbers" color="217,0,108" style="none" />
