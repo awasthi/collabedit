@@ -62,92 +62,35 @@ class SyntaxHighlighter : QSyntaxHighlighter {
     private:
         ConfigurationT conf;
         QTextDocument parent;
-
+        
         enum State {
             NormalState = -1,
             InsideComment,
             InsideDeliminer
         }
-
+    
     public:
         this(ConfigurationT conf, QTextDocument parent) {
             this.conf = conf;
             this.parent = parent;
-
+            
             super(parent);
         }
-
-    private:
-        char[] mid(char[] source, uint index, uint len) {
-            uint slen = source.length;
-
-            if (slen == 0 || index >= slen)
-                return "";
-
-            if (len > slen - index)
-                len = slen - index;
-
-            if (index == 0 && len == slen)
-                return source;
-
-            return source[index .. index + len];
-        }
-
+    
     protected:
         void highlightBlock(char[] text) {
-            int state = previousBlockState();
-            int start = 0;
-            int len = 0;
-
-            for (int i = 0; i < text.length; i++) {
-            	switch (text[i]) {
-            		case '0':
-            		case '1':
-            		case '2':
-            		case '3':
-            		case '4':
-            		case '5':
-            		case '6':
-            		case '7':
-            		case '8':
-            		case '9':
-            			setFormat(i, 1, conf.styles["number"]);
-            			break;
-            		default:
-            	}
-                /*if (contains(conf.keywords["delimiters"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["deliminer"]);
-                    start = i;
-                } else if (contains(conf.keywords["operators"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["operator"]);
-                    start = i;
-                } else if (contains(conf.keywords["comment"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["comment"]);
-                    start = i;
-                } else if (contains(conf.keywords["endComment"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["comment"]);
-                    start = i;
-                } else if (contains(conf.keywords["commentLine"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["commentLine"]);
-                    start = i;
-                } else if (contains(conf.keywords["words1"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["words1"]);
-                    start = i;
-                } else if (contains(conf.keywords["words2"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["words2"]);
-                    start = i;
-                } else if (contains(conf.keywords["words3"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["words3"]);
-                    start = i;
-                } else if (contains(conf.keywords["words4"], mid(text, start, len))) {
-                    setFormat(start, len, conf.styles["words4"]);
-                    start = i;
-                } else {
-                    start++;
-                }*/
-            }
-
-            setCurrentBlockState(state);
+                foreach(pair1; conf.pair) {
+                    foreach(patt; pair1.pattern) {
+                        int index = patt.indexIn(text);
+                        Stdout(patt.pattern).newline.flush;
+                        while(index >= 0){
+                                int length = patt.matchedLength();
+                                Stdout.formatln("rule found at pos {} with length {}", index, length);
+                                setFormat(index - 1, length, new QColor(0, 0, 255));
+                                index = patt.indexIn(text, index + length);
+                        }
+                    }
+                }
         }
 }
 
@@ -157,9 +100,9 @@ class CodeEditor : QPlainTextEdit {
         SyntaxHighlighter highlighter;
 
     public:
-        this(ConfigurationT t) {
+        this(ConfigurationT conf) {
             panel = new QPanel(this);
-            highlighter = new SyntaxHighlighter(t, document());
+            //highlighter = new SyntaxHighlighter(conf, document());
 
             blockCountChanged.connect(&updateInfoAreaWidth);
             updateRequest.connect(&updateInfoArea);
