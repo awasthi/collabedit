@@ -138,80 +138,8 @@ private:
 
         /* parse it into the languages array */
         auto root = doc.tree;
-
-        // some temps
-        char[] name;
-        QTextCharFormat format;
-        ConfigurationT conf;
-
-
-        /* do some actual parsing :-) */
-        foreach(elem; root.query.descendant("lang")) {
-            conf = new ConfigurationT;
-            
-            foreach(elem2; elem.query.attribute("name")) {
-                conf.name = elem2.value.dup;
-
-                debug(Configurator) {
-                    Stdout(conf.name).newline.flush;
-                }
-            }
-
-            foreach(elem2; elem.query.descendant("keywordLists")) {
-                foreach(elem3; elem2.query.descendant("keywords")) {
-                    foreach(elem4; elem3.query.attribute("name")) {
-                        name = elem4.value;
-                    }
-
-                    conf.keywords[name.dup] = elem3.value.dup;
-
-                    debug(Configurator) {
-                        Stdout(name)('=')(conf.keywords[name]).newline.flush;
-                    }
-                }
-            }
-
-            foreach(elem2; elem.query.descendant("styles")) {
-                foreach(elem3; elem2.query.descendant("wordsStyle")) {
-                    format = new QTextCharFormat();
-
-                    foreach(elem4; elem3.query.attribute("name")) {
-                        name = elem4.value;
-                    }
-
-                    foreach(elem4; elem3.query.attribute("color")) {
-                        char[][3] thin = TUtil.split(elem4.value, ",");
-                        //temps = [to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2])];
-
-                        format.setForeground(new QBrush(new QColor(to!(int)(thin[0]), to!(int)(thin[1]), to!(int)(thin[2]))));
-                    }
-
-                    foreach(elem4; elem3.query.attribute("style")) {
-                        switch(elem4.value) {
-                            case "1":
-                                format.setFontWeight(QFont.Bold);
-                                break;
-                            case "2":
-                                 format.setFontItalic(true);
-                                break;
-                            case "3":
-                                format.setFontUnderline(true);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    conf.styles[name.dup] = format;
-
-                    debug(Configurator) {
-                        Stdout(name).newline.flush;
-                    }
-                }
-            }
-
-            configurations[conf.name.dup] = Configuration(conf);
-        }        
+    
+        /* actually parse it into a ConfigurationT */
     }
 
     /*
@@ -304,7 +232,7 @@ public:
         return langPoss;
     }
 
-     ConfigurationT getConfiguration(Extension ext) {
+    synchronized ConfigurationT getConfiguration(Extension ext) {
         try {
             configurations[languages[ext]].conf.used++;
         } catch {
