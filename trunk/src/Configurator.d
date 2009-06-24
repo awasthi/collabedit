@@ -36,6 +36,11 @@ enum Operations {
     Close 
 }
 
+struct Pair {
+    QRegExp[] pattern;
+    QTextCharFormat format;
+}
+
 /*******************************************************************************
  Describes the Configuration for a certain extension
 
@@ -57,8 +62,7 @@ enum Operations {
 public class ConfigurationT {
 public:
     char[]          name;
-    char[][char[]]  keywords;
-    QTextCharFormat[char[]]   styles;
+    Pair[char[]]    pair;
     ulong           used;
 }
 
