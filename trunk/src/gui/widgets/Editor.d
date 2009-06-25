@@ -70,26 +70,31 @@ class SyntaxHighlighter : QSyntaxHighlighter {
         }
     
     public:
-        this(ConfigurationT conf, QTextDocument parent) {
-            this.conf = conf;
-            this.parent = parent;
-            
+        this(ConfigurationT _conf, QTextDocument _parent) {
+            parent = _parent;
+            conf = _conf;
             super(parent);
         }
     
     protected:
         void highlightBlock(char[] text) {
-            foreach(pair1; conf.pair) {
-                foreach(patt; pair1.pattern) {
+            /*if(conf is null) {
+                Stdout("Stupid?").newline.flush;
+            }
+            Stdout("in block").newline.flush;*/
+            if(text.length != 0) {
+            foreach(pair; conf.pair) {
+                foreach(patt; pair.pattern) {
                     int index = patt.indexIn(text);
-                    Stdout(patt.pattern).newline.flush;
-                    while(index >= 0) {
-                        int length = patt.matchedLength();
-                        Stdout.formatln("rule found at pos {} with length {}", index, length);
-                        setFormat(index - 1, length, new QColor(0, 0, 255));
-                        index = patt.indexIn(text, index + length);
+                    while(index >= 0){
+                            int length = patt.matchedLength();
+                            Stdout.formatln("rule found at pos {} with length {}", index, length);
+                            Stdout(patt.pattern).newline.flush;
+                            setFormat(index, length, pair.format);
+                            index = patt.indexIn(text, index + length);
                     }
                 }
+            }
             }
         }
 }
@@ -98,11 +103,12 @@ class CodeEditor : QPlainTextEdit {
     private:
         QPanel panel;
         SyntaxHighlighter highlighter;
+        ConfigurationT conf;
 
     public:
         this(ConfigurationT conf) {
             panel = new QPanel(this);
-            //highlighter = new SyntaxHighlighter(conf, document());
+            highlighter = new SyntaxHighlighter(conf, document());
 
             blockCountChanged.connect(&updateInfoAreaWidth);
             updateRequest.connect(&updateInfoArea);

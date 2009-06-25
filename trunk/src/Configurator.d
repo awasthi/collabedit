@@ -36,7 +36,7 @@ enum Operations {
     Close 
 }
 
-struct Pair {
+class Pair {
     QRegExp[] pattern;
     QTextCharFormat format;
 }
@@ -137,60 +137,81 @@ private:
         doc.parse(text);
 
         /* parse it into the languages array */
-        auto root = doc.tree;
-
-        /* temps */
-        ConfigurationT conf;
-        Pair pair;
-        char[] name, tex;
-        QTextCharFormat form;
-        
+        auto root = doc.tree;       
     
         /* actually parse it into a ConfigurationT */
-        foreach(elem; doc.query.descendant) {
+        QTextCharFormat format;
+        ConfigurationT conf;
+        char[] name;
+
+        foreach(elem; root.query.descendant("lang")) {
             conf = new ConfigurationT;
-            pair.format = new QTextCharFormat;
-            
             foreach(elem2; elem.query.attribute("name")) {
-                conf.name = elem2.value;
+                conf.name = elem2.value.dup;
+
+                debug(Configurator) {
+
+                    Stdout.formatln("{}", conf.name);
+
+                }
             }
 
-            foreach(elem2; doc.query.descendant("syntax")) {
-                foreach(elem3; doc.query.attribute("name")) {
-                    name = elem3.value;
-                }
-                foreach(elem3; doc.query.attribute("color")) {
-                    char[][3] thing = TUtil.split(elem3.value, ",");
-                    pair.format.setForeground(new QBrush(new QColor(parse(thing[0]), parse(thing[1]), parse(thing[2]))));
+            foreach(elem3; elem.query.descendant("syntax")) {
+                format = new QTextCharFormat();
+
+                foreach(elem4; elem3.query.attribute("name")) {
+                    name = elem4.value;
                 }
 
-                foreach(elem3; doc.query.attribute("style")) {
-                    foreach (style; TUtil.split(elem3.value, " ")) {
+
+
+                foreach(elem4; elem3.query.attribute("color")) {
+
+                    char[][3] thin = TUtil.split(elem4.value, ",");
+
+                    format.setForeground(new QBrush(new QColor(parse(thin[0]), parse(thin[1]), parse(thin[2]))));
+
+                }
+
+
+
+                foreach (elem4; elem3.query.attribute("style")) {
+                    foreach (style; TUtil.split(elem4.value, " ")) {
                         switch (style) {
                             case "bold":
-                                pair.format.setFontWeight(QFont.Bold);
+                                format.setFontWeight(QFont.Bold);
                                 break;
                             case "italic":
-                                pair.format.setFontItalic(true);
+                                format.setFontItalic(true);
                                 break;
                             case "underlined":
-                                pair.format.setFontUnderline(true);
+                                format.setFontUnderline(true);
                                 break;
                             default:
                         }
                     }
                 }
 
-                tex = elem2.value;
-                foreach(pattern; TUtil.split(tex, " ")) {
-                    pair.pattern ~= new QRegExp(pattern);
+                auto pair = new Pair;
+                pair.format = format;
+
+                foreach(car; TUtil.split(elem3.value, " "))
+                    pair.pattern ~= new QRegExp(car);
+
+                conf.pair[name.dup] = pair;
+
+                debug(Configurator) {
+                    Stdout.formatln("{}", name);
+                    foreach(pair; conf.pair) {
+                        Stdout("is actually here").newline.flush;
+                    }
                 }
             }
 
-            conf.pair[name] = pair;
             configurations[conf.name.dup] = Configuration(conf);
         }
     }
+
 
     /*
        pulls all of the text out this input stream
@@ -261,6 +282,12 @@ public:
         } catch {
             getConf(ext);
             configurations[languages[ext]].conf.used++;
+        }
+
+        debug(Configurator) {
+            foreach(pair; configurations[languages[ext]].conf.pair) {
+                Stdout("is actually here").newline.flush;
+            }
         }
         return configurations[languages[ext]].conf;
     }
