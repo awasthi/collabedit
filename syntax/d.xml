@@ -1,8 +1,8 @@
 <lang name="d">
     <syntax name="multiLineComment" color="0,128,0" style="none">/\*.*\*/</syntax>
+    <syntax name="numbers" color="217,0,108" style="none">\b(?:[0-9]+|[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][-+]?[0-9]+)?[jJ]?\b|\b(?:[0-9]+|0x[0-9A-Fa-f]+)[lL]?[jJ]?\b</syntax>
 	<syntax name="singleLineComment" color="0,128,0" style="none">//.*</syntax>
     <syntax name="strings" color="175,43,255" style="none">(?:\b""(?!")|"([^"]|\\\\")+")|(?:\\b''(?!')|'(?:[^']|\\\\')+')|(?:'''(?:[^']{0,2})*''')|(?:\"\"\"(?:[^\"]{0,2})*\"\"\")</syntax>
-    <syntax name="numbers" color="217,0,108" style="none">\b(?:[0-9]+|[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][-+]?[0-9]+)?[jJ]?\b|\b(?:[0-9]+|0x[0-9A-Fa-f]+)[lL]?[jJ]?\b</syntax>
     <syntax name="words1" color="0,0,255" style="bold">\babstract\b|\balias\b|\balign\b|\basm\b|\bassert\b|\bauto\b|\bbody\b|\bbreak\b|\bcase\b|\bcast\b|\bcatch\b|\bclass\b|\bconst\b|\bcontinue\b|\bdebug\b|\bdefault\b|\bdelegate\b|\bdelete\b|\bdeprecated\b|\bdo\b|\belse\b|\benum\b|\bexport\b|\bextern\b|\bfalse\b|\bfinal\b|\bfinally\b|\bfor\b|\bforeach\b|\bforeach_reverse\b|\bfunction\b|\bgoto\b|\bif\b|\bimport\b|\bin\b|\binout\b|\binterface\b|\binvariant\b|\bis\b|\blazy\b|\bmixin\b|\bmodule\b|\bnew\b|\bnull\b|\bout\b|\boverride\b|\bpackage\b|\bpragma\b|\bprivate\b|\bprivate:\b|\bprotected\b|\bprotected:\b|\bpublic\b|\bpublic:\b|\breturn\b|\bscope\b|\bstatic\b|\bstruct\b|\bsuper\b|\bswitch\b|\bsynchronized\b|\btemplate\b|\bthis\b|\bthrow\b|\btrue\b|\btry\b|\btypedef\b|\btypeid\b|\btypeof\b|\bunion\b|\bunittest\b|\bversion\b|\bvoid\b|\bvolatile\b|\bwchar\b|\bwhile\b|\bwith\b|\b~this\b</syntax>
     <syntax name="words2" color="0,0,255" style="bold">\bbool\b|\bbyte\b|\bcdouble\b|\bcent\b|\bcfloat\b|\bchar\b|\bcreal\b|\bdchar\b|\bdouble\b|\bfloat\b|\bidouble\b|\bifloat\b|\bint\b|\bireal\b|\blong\b|\breal\b|\bshort\b|\bubyte\b|\bucent\b|\buint\b|\bulong\b|\bushort\b</syntax>
 </lang>
