@@ -10,7 +10,7 @@
     <syntax name="words5" color="255,0,255" style="bold">\bdebug\b|\bunittest\b</syntax>
     <syntax name="words6" color="20,19,18" style="bold">\basm\b|\bbody\b|\bbreak\b|\bcase\b|\bcatch\b|\bcontinue\b|\bdefault\b|\bdo\b|\belse\b|\bfinally\b|\bfor\b|\bforeach\b|\bforeach_reverse\b|\bgoto\b|\bif\b|\bmixin\b|\breturn\b|\bscope\b|\bswitch\b|\bsynchronized\b|\bthrow\b|\btry\b|\bwhile\b|\bwith\b</syntax>
     <syntax name="words7" color="0,0,128" style="bold">\bassert\b|\bcast\b|\bdelete\b|\bexit\b|\bfalse\b|\bfunction\b|\bin\b|\bis\b|\bnew\b|\bnull\b|\bsuper\b|\bthis\b|\btrue\b|\btypedef\b|\btypeid\b|\b~this\b</syntax>
-    <syntax name="words8" color="128,0,128" style="bold linethrough">\bdeprecated\b|\bvolatile\b</syntax>
+    <syntax name="words8" color="128,0,128" style="bold strikeout">\bdeprecated\b|\bvolatile\b</syntax>
     <syntax name="words9" color="0,128,0" style="bold">\bimport\b|\bmodule\b|\btemplate\b</syntax>
     <syntax name="words10" color="0,170,0" style="bold">\bpragma\b</syntax>
     <syntax name="extra" color="191,3,3" style="bold">\bBUG\b|\bNOTE\b|\bTODO\b</syntax>
