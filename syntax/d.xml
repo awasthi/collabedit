@@ -1,11 +1,8 @@
 <lang name="d">
-	<!--<syntax name="default" color="0,0,0" style="none" /> -->
-	<syntax name="numbers" color="217,0,108" style="none">\b0\b \b1\b \b2\b \b3\b \b4\b \b5\b \b6\b \b7\b \b8\b \b9\b</syntax>
-	<syntax name="deliminers" color="175,43,255" style="none">\b"\b \b'\b</syntax>
-	<syntax name="multiLineComment" color="0,128,0" style="none">\b/*\b \b*/\b</syntax>
-	<syntax name="numbers" color="217,0,108" style="none" />
-	<syntax name="operators" color="0,0,0" style="none">\b!\b \b(\b \b)\b \b?\b \b[\b \b]\b \b&lt;\b \b=\b \b&gt;\b</syntax>
-	<syntax name="singleLineComment" color="0,128,0" style="none">\b//\b</syntax>
+
+
+
+
 	<syntax name="words1" color="0,0,255" style="bold italic">\babstract\b \balias\b \balign\b \basm\b \bassert\b \bauto\b \bbody\b \bbreak\b \bcase\b \bcast\b \bcatch\b \bclass\b \bconst\b \bcontinue\b \bdebug\b \bdefault\b \bdelegate\b \bdelete\b \bdeprecated\b \bdo\b \belse\b \benum\b \bexport\b \bextern\b \bfalse\b \bfinal\b \bfinally\b \bfor\b \bforeach\b \bforeach_reverse\b \bfunction\b \bgoto\b \bif\b \bimport\b \bin\b \binout\b \binterface\b \binvariant\b \bis\b \blazy\b \bmixin\b \bmodule\b \bnew\b \bnull\b \bout\b \boverride\b \bpackage\b \bpragma\b \bprivate\b \bprivate:\b \bprotected\b \bprotected:\b \bpublic\b \bpublic:\b \breturn\b \bscope\b \bstatic\b \bstruct\b \bsuper\b \bswitch\b \bsynchronized\b \btemplate\b \bthis\b \bthrow\b \btrue\b \btry\b \btypedef\b \btypeid\b \btypeof\b \bunion\b \bunittest\b \bversion\b \bvoid\b \bvolatile\b \bwchar\b \bwhile\b \bwith\b \b~this\b</syntax>
 	<syntax name="words2" color="0,0,255" style="bold">\bbool\b \bbyte\b \bcdouble\b \bcent\b \bcfloat\b \bchar\b \bcreal\b \bdchar\b \bdouble\b \bfloat\b \bidouble\b \bifloat\b \bint\b \bireal\b \blong\b \breal\b \bshort\b \bubyte\b \bucent\b \buint\b \bulong\b \bushort\b</syntax>
 </lang>
