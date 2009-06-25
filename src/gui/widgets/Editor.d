@@ -6,6 +6,7 @@ import src.Configurator;
 import tango.core.Array : contains;
 import tango.math.Math : max;
 import tango.io.Stdout;
+import tango.time.StopWatch;
 import Integer = tango.text.convert.Integer : toString;
 
 class EditorManager {
@@ -82,17 +83,25 @@ class SyntaxHighlighter : QSyntaxHighlighter {
                 Stdout("Stupid?").newline.flush;
             }
             Stdout("in block").newline.flush;*/
+            StopWatch elapsed;
+            elapsed.start;
+            double i = 0;
             if(text.length != 0) {
             foreach(pair; conf.pair) {
                 foreach(patt; pair.pattern) {
                     int index = patt.indexIn(text);
                     while(index >= 0){
+                        i += elapsed.stop;
+                        Stdout(i).newline.flush;
+                        if(i < 2) {
+                            elapsed.start;
                             int length = patt.matchedLength();
                             Stdout.formatln("rule found at pos {} with length {}", index, length);
                             Stdout(patt.pattern).newline.flush;
                             setFormat(index, length, pair.format);
                             index = patt.indexIn(text, index + length);
-                    }
+                        } else { i = 0; break; }
+                    }                    
                 }
             }
             }
