@@ -171,7 +171,7 @@ class MainWindow : QMainWindow {
             auto menu = new QMenu(tr("File"));
             //menu.setIcon(...);
             
-            menu.addActions([new QAction(tr("D"), this), new QAction(tr("Plain"), this)]);
+            menu.addActions([new QAction(tr("D"), this), new QAction(tr("Plain text"), this)]);
             
             bar = addToolBar(tr("File"));
             bar.addAction(menu.menuAction());
