@@ -96,6 +96,8 @@ class SyntaxHighlighter : QSyntaxHighlighter {
                         if(i < 2) {
                             elapsed.start;
                             int length = patt.matchedLength();
+                            if(length <= 0)
+                                break;
                             Stdout.formatln("rule found at pos {} with length {}", index, length);
                             Stdout(patt.pattern).newline.flush;
                             setFormat(index, length, pair.format);
