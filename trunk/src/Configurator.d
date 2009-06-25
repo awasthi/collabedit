@@ -13,7 +13,7 @@ private {
     import tango.io.vfs.model.Vfs;
     import tango.io.vfs.FileFolder;
     import TUtil = tango.text.Util;
-    import tango.util.Convert;
+    import tango.text.convert.Integer : parse;
     import qt.gui.QColor;
     import qt.gui.QBrush;
     import qt.gui.QTextCharFormat;
@@ -138,8 +138,58 @@ private:
 
         /* parse it into the languages array */
         auto root = doc.tree;
+
+        /* temps */
+        ConfigurationT conf;
+        Pair pair;
+        char[] name, tex;
+        QTextCharFormat form;
+        
     
         /* actually parse it into a ConfigurationT */
+        foreach(elem; doc.query.descendant) {
+            conf = new ConfigurationT;
+            pair.format = new QTextCharFormat;
+            
+            foreach(elem2; elem.query.attribute("name")) {
+                conf.name = elem2.value;
+            }
+
+            foreach(elem2; doc.query.descendant("syntax")) {
+                foreach(elem3; doc.query.attribute("name")) {
+                    name = elem3.value;
+                }
+                foreach(elem3; doc.query.attribute("color")) {
+                    char[][3] thing = TUtil.split(elem3.value, ",");
+                    pair.format.setForeground(new QBrush(new QColor(parse(thing[0]), parse(thing[1]), parse(thing[2]))));
+                }
+
+                foreach(elem3; doc.query.attribute("style")) {
+                    foreach (style; TUtil.split(elem3.value, " ")) {
+                        switch (style) {
+                            case "bold":
+                                pair.format.setFontWeight(QFont.Bold);
+                                break;
+                            case "italic":
+                                pair.format.setFontItalic(true);
+                                break;
+                            case "underlined":
+                                pair.format.setFontUnderline(true);
+                                break;
+                            default:
+                        }
+                    }
+                }
+
+                tex = elem2.value;
+                foreach(pattern; TUtil.split(tex, " ")) {
+                    pair.pattern ~= new QRegExp(pattern);
+                }
+            }
+
+            conf.pair[name] = pair;
+            configurations[conf.name.dup] = Configuration(conf);
+        }
     }
 
     /*
