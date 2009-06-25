@@ -187,6 +187,9 @@ private:
                             case "underlined":
                                 format.setFontUnderline(true);
                                 break;
+                            case "strikeout":
+                                format.setFontStrikeOut(true);
+                                break;
                             default:
                         }
                     }
