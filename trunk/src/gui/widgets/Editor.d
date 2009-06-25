@@ -86,14 +86,11 @@ class SyntaxHighlighter : QSyntaxHighlighter {
                             int index = patt.indexIn(text);
                             while (index >= 0) {
                                 i += elapsed.stop;
-                                Stdout(i).newline.flush;
                                 if (i < 2) {
                                     elapsed.start;
                                     int length = patt.matchedLength();
                                     if(length <= 0)
                                         break;
-                                    Stdout.formatln("rule found at pos {} with length {}", index, length);
-                                    Stdout(patt.pattern).newline.flush;
                                     setFormat(index, length, pair.format);
                                     index = patt.indexIn(text, index + length);
                                 } else { i = 0; break; }
