@@ -167,9 +167,14 @@ class MainWindow : QMainWindow {
 		void createToolBars() {
 			auto bar = addToolBar(tr("Connection"));
 			bar.addAction(actions[0]);
+            
+            auto menu = new QMenu(tr("File"));
+            //menu.setIcon(...);
+            
+            menu.addActions([new QAction(tr("D"), this), new QAction(tr("Plain"), this)]);
 			
 			bar = addToolBar(tr("File"));
-			bar.addAction(actions[1]);
+			bar.addAction(menu.menuAction());
 			bar.addAction(actions[2]);
 		}
 		
