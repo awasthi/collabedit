@@ -74,7 +74,7 @@ public union Configuration {
  describes handlers as a type
  *******************************************************************************/
 typedef ConfigurationT delegate(Extension ext)   OpenHandler;
-typedef void delegate(Extension ext)           CloseHandler;
+typedef void delegate(Extension ext)             CloseHandler;
 
 /*******************************************************************************
  Describes the configuration of the entire editor.
@@ -169,7 +169,8 @@ private:
 
                     char[][3] thin = TUtil.split(elem4.value, ",");
 
-                    format.setForeground(new QBrush(new QColor(parse(thin[0]), parse(thin[1]), parse(thin[2]))));
+                    format.setForeground(new QBrush(new QColor(parse(
+								thin[0]), parse(thin[1]), parse(thin[2]))));
 
                 }
 
