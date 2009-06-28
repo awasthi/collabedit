@@ -48,6 +48,10 @@ class MainWindow : QMainWindow {
             auto previewLabel = new QLabel();
             previewLabel.setPixmap(resourceManager.getPixmap(ResourceManager.PREVIEW));
             previewLabel.setAlignment(Qt.AlignCenter);
+
+            createActions();
+            createMenus();
+            createToolBars();
             
             setCentralWidget(previewLabel);
             
@@ -120,10 +124,6 @@ class MainWindow : QMainWindow {
         }
         
         void setupFrontend() {
-            createActions();
-            createMenus();
-            createToolBars();
-            
             setCentralWidget(tabWidget);
             createDockWidgets();
             
