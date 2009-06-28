@@ -127,6 +127,13 @@ class MainWindow : QMainWindow {
             setCentralWidget(tabWidget);
             createDockWidgets();
             
+            auto menu = menuBar.addMenu(tr("&View"));
+            
+            menu.addAction(docks[0].toggleViewAction());
+            menu.addAction(docks[1].toggleViewAction());
+            menu.addAction(docks[2].toggleViewAction());
+            menu.addAction(docks[3].toggleViewAction());
+            
             addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
             addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
             addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
@@ -153,15 +160,6 @@ class MainWindow : QMainWindow {
             menu.addAction(actions[6]);
             menu.addAction(actions[7]);
             menu.addAction(actions[8]);
-            
-            menu = menuBar.addMenu(tr("&View"));
-            
-            if (docks.length) {
-                menu.addAction(docks[0].toggleViewAction());
-                menu.addAction(docks[1].toggleViewAction());
-                menu.addAction(docks[2].toggleViewAction());
-                menu.addAction(docks[3].toggleViewAction());
-            }
             
             menu = menuBar.addMenu(tr("&?"));
             
