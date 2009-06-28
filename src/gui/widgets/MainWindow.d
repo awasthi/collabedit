@@ -24,6 +24,7 @@ class MainWindow : QMainWindow {
         ConnectionManager connectionMan;
         
         QAction[] actions;
+        QMenu viewMenu;
         QDockWidget[] docks;
         
         Chat chat;
@@ -127,12 +128,10 @@ class MainWindow : QMainWindow {
             setCentralWidget(tabWidget);
             createDockWidgets();
             
-            auto menu = menuBar.addMenu(tr("&View"));
-            
-            menu.addAction(docks[0].toggleViewAction());
-            menu.addAction(docks[1].toggleViewAction());
-            menu.addAction(docks[2].toggleViewAction());
-            menu.addAction(docks[3].toggleViewAction());
+            viewMenu.addAction(docks[0].toggleViewAction());
+            viewMenu.addAction(docks[1].toggleViewAction());
+            viewMenu.addAction(docks[2].toggleViewAction());
+            viewMenu.addAction(docks[3].toggleViewAction());
             
             addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
             addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
@@ -160,6 +159,8 @@ class MainWindow : QMainWindow {
             menu.addAction(actions[6]);
             menu.addAction(actions[7]);
             menu.addAction(actions[8]);
+            
+            viewMenu = menuBar.addMenu(tr("&View"));
             
             menu = menuBar.addMenu(tr("&?"));
             
