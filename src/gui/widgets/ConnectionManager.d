@@ -1,4 +1,4 @@
-module src.gui.widgets.ConnectWindow;
+module src.gui.widgets.ConnectionManager;
 
 import qt.core.QDir;
 import qt.gui.QDialog;
@@ -15,7 +15,7 @@ import qt.gui.QWidget;
 import src.ResourceManager;
 import src.gui.widgets.MainWindow;
 
-class ConnectWindow : QDialog {
+class ConnectionManager : QDialog {
     public:
         this(MainWindow parent) {
             super(parent);

@@ -21,7 +21,7 @@ class MainWindow : QMainWindow {
         QLineEdit host, name, password, file;
     
     private:
-        ConnectWindow connect;
+        ConnectionManager connectionMan;
         
         QAction[] actions;
         QDockWidget[] docks;
@@ -156,7 +156,10 @@ class MainWindow : QMainWindow {
             
             menu = menuBar.addMenu(tr("&View"));
             
-            //menu.addAction();
+            menu.addAction(docks[0].toggleViewAction());
+            menu.addAction(docks[1].toggleViewAction());
+            menu.addAction(docks[2].toggleViewAction());
+            menu.addAction(docks[3].toggleViewAction());
             
             menu = menuBar.addMenu(tr("&?"));
             
