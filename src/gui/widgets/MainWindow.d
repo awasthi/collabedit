@@ -9,7 +9,7 @@ import qt.gui.QMainWindow;
 import qt.gui.QMessageBox;
 import src.gui.widgets.Chat;
 import src.gui.widgets.Compiler;
-import src.gui.widgets.ConnectWindow;
+import src.gui.widgets.ConnectionManager;
 import src.gui.widgets.ProjectTree;
 import src.gui.widgets.TabWidget;
 import src.gui.widgets.UserList;
@@ -51,8 +51,7 @@ class MainWindow : QMainWindow {
             
             setCentralWidget(previewLabel);
             
-            connect = new ConnectWindow(this);
-            openConnection();
+            connectionMan = new ConnectionManager(this);
         }
         
     private:
@@ -184,16 +183,16 @@ class MainWindow : QMainWindow {
              * name: name.text()
              * password: password.text()
              */
-            connect.close();
+            connectionMan.close();
             if (!actions.length) setupFrontend();
         }
         
         void rejectConnection() {
-            connect.close();
+            connectionMan.close();
         }
         
         void openConnection() {
-            connect.show();
+            connectionMan.show();
         }
         
         void newFile() {
