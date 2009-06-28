@@ -189,7 +189,7 @@ class MainWindow : QMainWindow {
              * password: password.text()
              */
             connectionMan.close();
-            if (!actions.length) setupFrontend();
+            if (!docks.length) setupFrontend();
         }
         
         void rejectConnection() {
