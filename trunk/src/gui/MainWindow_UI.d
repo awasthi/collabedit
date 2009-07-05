@@ -2,7 +2,9 @@ module src.gui.MainWindow_UI;
 
 public {
     import qt.gui.QDockWidget;
+    import qt.gui.QLabel;
     import qt.gui.QMainWindow;
+    import src.ResourceManager;
     import src.gui.Chat;
     import src.gui.Compiler;
     import src.gui.ProjectTree;
@@ -13,7 +15,105 @@ public {
 mixin QT_BEGIN_NAMESPACE;
 
 template MainWindow_UI() {
+    private:
+        QMenu viewMenu;
+        
+        void createActions(QMainWindow parent) {
+            actions ~= new QAction(tr("&Open Connection"), parent);
+            actions ~= new QAction(tr("&New"), parent);
+            actions ~= new QAction(tr("&Save"), parent);
+            actions ~= new QAction(tr("E&xit"), parent);
+            actions ~= new QAction(tr("&Undo"), parent);
+            actions ~= new QAction(tr("&Redo"), parent);
+            actions ~= new QAction(tr("Cu&t"), parent);
+            actions ~= new QAction(tr("&Copy"), parent);
+            actions ~= new QAction(tr("&Paste"), parent);
+            actions ~= new QAction(tr("&About"), parent);
+            
+            actions[0].setShortcut(tr("Ctrl+O"));
+            actions[0].setStatusTip(tr("Connect to a server"));
+            actions[0].triggered.connect(&MainWindow.slotOpenConnection);
+            
+            actions[1].setShortcut(tr("Ctrl+N"));
+            actions[1].setStatusTip(tr("Create a new file"));
+            actions[1].triggered.connect(&MainWindow.slotNewFile);
+            
+            actions[2].setShortcut(tr("Ctrl+S"));
+            actions[2].setStatusTip(tr("Save the document"));
+            actions[2].triggered.connect(&MainWindow.slotSaveFile);
+            
+            actions[3].setShortcut(tr("Ctrl+Q"));
+            actions[3].setStatusTip(tr("Exit the application"));
+            actions[3].triggered.connect(&MainWindow.close);
+            
+            actions[4].setShortcut(tr("Ctrl+Z"));
+            actions[4].setStatusTip(tr("Undo last change"));
+            //actions[4].triggered.connect(&MainWindow.slotUndo);
+            
+            actions[5].setShortcut(tr("Ctrl+Y"));
+            actions[5].setStatusTip(tr("Redo last undone change"));
+            //actions[5].triggered.connect(&MainWindow.slotRedo);
+            
+            actions[6].setShortcut(tr("Ctrl+X"));
+            actions[6].setStatusTip(tr("Cut the current selection's contents to the clipboard"));
+            //actions[6].triggered.connect(&MainWindow.slotCut);
+            
+            actions[7].setShortcut(tr("Ctrl+C"));
+            actions[7].setStatusTip(tr("Copy the current selection's contents to the clipboard"));
+            //actions[7].triggered.connect(&MainWindow.slotCopy);
+            
+            actions[8].setShortcut(tr("Ctrl+V"));
+            actions[8].setStatusTip(tr("Paste the clipboard's contents into the current selection"));
+            //actions[8].triggered.connect(&MainWindow.slotPaste);
+            
+            actions[9].setStatusTip(tr("About collabEdit"));
+            actions[9].triggered.connect(&MainWindow.slotAbout);
+        }
+        
+        void createMenus(QMainWindow parent) {
+            auto menu = parent.menuBar.addMenu(tr("&File"));
+            
+            menu.addAction(actions[0]);
+            menu.addSeparator();
+            menu.addAction(actions[1]);
+            menu.addAction(actions[2]);
+            menu.addSeparator();
+            menu.addAction(actions[3]);
+            
+            menu = parent.menuBar.addMenu(tr("&Edit"));
+            
+            menu.addAction(actions[4]);
+            menu.addAction(actions[5]);
+            menu.addSeparator();
+            menu.addAction(actions[6]);
+            menu.addAction(actions[7]);
+            menu.addAction(actions[8]);
+            
+            viewMenu = parent.menuBar.addMenu(tr("&View"));
+            
+            menu = parent.menuBar.addMenu(tr("&?"));
+            
+            menu.addAction(actions[9]);
+        }
+        
+        void createToolBars(QMainWindow parent) {
+            auto bar = parent.addToolBar(tr("Connection"));
+            bar.addAction(actions[0]);
+            
+            auto menu = new QMenu(tr("File"));
+            //menu.setIcon(...);
+            
+            menu.addActions([new QAction(tr("D"), parent), new QAction(tr("Plain text"), parent)]);
+            
+            bar = parent.addToolBar(tr("File"));
+            bar.addAction(menu.menuAction());
+            bar.addAction(actions[2]);
+        }
+    
     public:
+        ResourceManager resourceManager;
+        QAction[] actions;
+        
         Chat chat;
         Compiler compiler;
         ProjectTree projectTree;
@@ -22,8 +122,15 @@ template MainWindow_UI() {
         
         QDockWidget[] docks;
         
-        void setupUi(QMainWindow parent) {
+        void setupGlobal(QMainWindow parent) {
+            resourceManager = new ResourceManager();
+            
+            parent.setWindowIcon(resourceManager.getIcon(ResourceManager.WINDOW_ICON));
             parent.setWindowTitle(tr("collabEdit"));
+            createActions(parent);
+            
+            createMenus(parent);
+            createToolBars(parent);
             
             chat = new Chat();
             compiler = new Compiler();
@@ -40,6 +147,20 @@ template MainWindow_UI() {
             docks[1].setWidget(userList);
             docks[2].setWidget(compiler);
             docks[3].setWidget(chat);
+        }
+        
+        void setupPreview(QMainWindow parent) {
+            setupGlobal(parent);
+            
+            auto preview = new QLabel();
+            preview.setAlignment(Qt.AlignCenter);
+            preview.setPixmap(resourceManager.getPixmap(ResourceManager.PREVIEW));
+            
+            parent.setCentralWidget(preview);
+        }
+        
+        void setupUi(QMainWindow parent) {
+            setupGlobal(parent);
             
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
@@ -52,6 +173,12 @@ template MainWindow_UI() {
 
 struct MainWindow {
     mixin MainWindow_UI;
+    
+    void slotOpenConnection() {}
+    void slotNewFile() {}
+    void slotSaveFile() {}
+    void close() {}
+    void slotAbout() {}
 }
 
 mixin QT_END_NAMESPACE;
