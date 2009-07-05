@@ -1,7 +1,7 @@
 module src.EditorManager;
 
 import src.Configurator;
-import src.gui.widgets.CodeEditor;
+import src.gui.CodeEditor;
 
 class EditorManager {
     private:
