@@ -3,12 +3,17 @@ module src.gui.Editor;
 private {
     import qt.gui.QPlainTextEdit;
     import src.gui.CodeEditor;
+    import src.gui.Editor_UI;
 }
 
 class Editor : QPlainTextEdit {
+    private:
+        mixin Editor_UI;
+    
     public:
         this(CodeEditor parent) {
             super(parent);
+            setupUi(parent);
         }
         
         QTextBlock getFirstVisibleBlock() {
