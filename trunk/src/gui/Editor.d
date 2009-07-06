@@ -13,7 +13,7 @@ class Editor : QPlainTextEdit {
     public:
         this(CodeEditor parent) {
             super(parent);
-            setupUi(parent);
+            setupUi(this);
         }
         
         QTextBlock getFirstVisibleBlock() {
