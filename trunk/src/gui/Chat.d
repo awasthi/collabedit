@@ -7,16 +7,15 @@ private {
 }
 
 class Chat : QWidget {
-    public:
-        this(QWidget parent = null) {
-            super(parent);
-            setupUi(this);
-        }
-    
     private:
         mixin Chat_UI;
         
         void slotSendClicked() {
             // appendToChat(layout("{:HH:mm}", Clock.now()), "user", getInput())
+        }
+    public:
+        this(QWidget parent = null) {
+            super(parent);
+            setupUi(this);
         }
 }

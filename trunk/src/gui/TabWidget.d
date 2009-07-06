@@ -6,6 +6,9 @@ private {
 }
 
 class TabWidget : QTabWidget {
+    private:
+        mixin TabWidget_UI;
+    
     public:
         this(QWidget parent = null) {
             super(parent);
@@ -14,7 +17,4 @@ class TabWidget : QTabWidget {
             auto editorManager = new EditorManager();
             addTab(editorManager.get("d"), "D Editor");
         }
-    
-    private:
-        mixin TabWidget_UI;
 }
