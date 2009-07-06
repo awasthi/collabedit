@@ -1,7 +1,6 @@
 module src.gui.LinenumberPanel;
 
 private {
-    import qt.gui.QFrame;
     import qt.gui.QPaintEvent;
     import src.gui.CodeEditor;
     import src.gui.Panel;
