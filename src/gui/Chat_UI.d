@@ -26,6 +26,7 @@ template Chat_UI() {
             send.clicked.connect(&Chat.slotSendClicked);
             
             auto hLayout = new QHBoxLayout();
+            hLayout.setMargin(0);
             hLayout.addWidget(input);
             hLayout.addWidget(send);
             
@@ -33,6 +34,7 @@ template Chat_UI() {
             subWidget.setLayout(hLayout);
             
             auto vLayout = new QVBoxLayout();
+            vLayout.setMargin(0);
             vLayout.addWidget(chat);
             vLayout.addWidget(subWidget);
             

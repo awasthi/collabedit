@@ -10,6 +10,7 @@ class MainWindow : QMainWindow {
         this(QWidget parent = null) {
             super(parent);
             
-            setupPreview(this);
+            setupGlobal(this);
+            setupPreview();
         }
 }
