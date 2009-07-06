@@ -122,7 +122,8 @@ template MainWindow_UI() {
             bar.addAction(actions[2]);
         }
         
-        void setupGlobal() {
+        void setupGlobal(QMainWindow parent) {
+            this.parent = parent;
             resourceManager = new ResourceManager();
             
             parent.setWindowIcon(resourceManager.getIcon(ResourceManager.WINDOW_ICON));
@@ -147,12 +148,11 @@ template MainWindow_UI() {
             docks[1].setWidget(userList);
             docks[2].setWidget(compiler);
             docks[3].setWidget(chat);
+            
+            parent.statusBar.showMessage(tr("Ready"));
         }
         
-        void setupPreview(QMainWindow parent) {
-            this.parent = parent;
-            setupGlobal();
-            
+        void setupPreview() {
             auto preview = new QLabel();
             preview.setAlignment(Qt.AlignCenter);
             preview.setPixmap(resourceManager.getPixmap(ResourceManager.PREVIEW));
