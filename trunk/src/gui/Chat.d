@@ -1,6 +1,10 @@
 module src.gui.Chat;
 
-private import src.gui.Chat_UI;
+private {
+    import src.gui.Chat_UI;
+    import tango.time.Clock;
+    import tango.text.locale.Locale;
+}
 
 class Chat : QWidget {
     public:
@@ -13,6 +17,6 @@ class Chat : QWidget {
         mixin Chat_UI;
         
         void slotSendClicked() {
-            // input.text()
+            // appendToChat(layout("{:HH:mm}", Clock.now()), "user", getInput())
         }
 }

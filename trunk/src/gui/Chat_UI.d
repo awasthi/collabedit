@@ -12,10 +12,11 @@ public {
 mixin QT_BEGIN_NAMESPACE;
 
 template Chat_UI() {
-    public:
+    private:
         QTextEdit chat;
         QLineEdit input;
-        
+    
+    public:
         void setupUi(QWidget parent) {
             chat = new QTextEdit();
             chat.setReadOnly(true);
@@ -37,6 +38,14 @@ template Chat_UI() {
             vLayout.addWidget(subWidget);
             
             parent.setLayout(vLayout);
+        }
+        
+        char[] getInput() {
+            return input.text();
+        }
+        
+        void appendToChat(char[] date, char[] from, char[] message) {
+            chat.append(date ~ " " ~ from ~ ": " ~ message);
         }
 }
 
