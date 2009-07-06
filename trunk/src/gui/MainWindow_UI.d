@@ -16,7 +16,17 @@ mixin QT_BEGIN_NAMESPACE;
 
 template MainWindow_UI() {
     private:
+        ResourceManager resourceManager;
+        QAction[] actions;
         QMenu viewMenu;
+        
+        Chat chat;
+        Compiler compiler;
+        ProjectTree projectTree;
+        TabWidget tabWidget;
+        UserList userList;
+        
+        QDockWidget[] docks;
         
         void createActions(QMainWindow parent) {
             actions ~= new QAction(tr("&Open Connection"), parent);
@@ -109,18 +119,6 @@ template MainWindow_UI() {
             bar.addAction(menu.menuAction());
             bar.addAction(actions[2]);
         }
-    
-    public:
-        ResourceManager resourceManager;
-        QAction[] actions;
-        
-        Chat chat;
-        Compiler compiler;
-        ProjectTree projectTree;
-        TabWidget tabWidget;
-        UserList userList;
-        
-        QDockWidget[] docks;
         
         void setupGlobal(QMainWindow parent) {
             resourceManager = new ResourceManager();

@@ -15,8 +15,7 @@ template Chat_UI() {
     private:
         QTextEdit chat;
         QLineEdit input;
-    
-    public:
+        
         void setupUi(QWidget parent) {
             chat = new QTextEdit();
             chat.setReadOnly(true);

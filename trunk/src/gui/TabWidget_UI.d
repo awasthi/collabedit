@@ -8,7 +8,7 @@ public {
 mixin QT_BEGIN_NAMESPACE;
 
 template TabWidget_UI() {
-    public void setupUi(QTabWidget parent) {
+    private void setupUi(QTabWidget parent) {
         parent.setTabsClosable(true);
         parent.setMovable(true);
     }
