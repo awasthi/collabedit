@@ -1,7 +1,9 @@
 module src.gui.Editor;
 
-import qt.gui.QPlainTextEdit;
-import src.gui.CodeEditor;
+private {
+    import qt.gui.QPlainTextEdit;
+    import src.gui.CodeEditor;
+}
 
 class Editor : QPlainTextEdit {
     public:
