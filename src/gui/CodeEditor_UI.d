@@ -55,8 +55,7 @@ template CodeEditor_UI() {
             
             editor.setExtraSelections(extraSelections);
         }
-    
-    public:
+        
         void setupUi(src.gui.CodeEditor.CodeEditor parent, ConfigurationT conf) {
             editor = new Editor(parent);
             linenumberPanel = new LinenumberPanel(parent);
@@ -91,7 +90,8 @@ template CodeEditor_UI() {
             
             return 3 + CodeEditor.fontMetrics().width("9") * digits;
         }
-        
+    
+    public:
         void linenumberPainter(QPainter p, QPaintEvent e) {
             auto brush = new QBrush(new QColor(47, 85, 164));
             auto block = editor.getFirstVisibleBlock();

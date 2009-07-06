@@ -4,6 +4,7 @@ public {
     import qt.gui.QDockWidget;
     import qt.gui.QLabel;
     import qt.gui.QMainWindow;
+    import qt.gui.QMessageBox;
     import src.ResourceManager;
     import src.gui.Chat;
     import src.gui.Compiler;
@@ -17,6 +18,7 @@ mixin QT_BEGIN_NAMESPACE;
 template MainWindow_UI() {
     private:
         ResourceManager resourceManager;
+        QMainWindow parent;
         QAction[] actions;
         QMenu viewMenu;
         
@@ -28,7 +30,7 @@ template MainWindow_UI() {
         
         QDockWidget[] docks;
         
-        void createActions(QMainWindow parent) {
+        void createActions() {
             actions ~= new QAction(tr("&Open Connection"), parent);
             actions ~= new QAction(tr("&New"), parent);
             actions ~= new QAction(tr("&Save"), parent);
@@ -42,15 +44,15 @@ template MainWindow_UI() {
             
             actions[0].setShortcut(tr("Ctrl+O"));
             actions[0].setStatusTip(tr("Connect to a server"));
-            actions[0].triggered.connect(&MainWindow.slotOpenConnection);
+            actions[0].triggered.connect(&slotOpenConnection);
             
             actions[1].setShortcut(tr("Ctrl+N"));
             actions[1].setStatusTip(tr("Create a new file"));
-            actions[1].triggered.connect(&MainWindow.slotNewFile);
+            //actions[1].triggered.connect(&MainWindow.slotNewFile);
             
             actions[2].setShortcut(tr("Ctrl+S"));
             actions[2].setStatusTip(tr("Save the document"));
-            actions[2].triggered.connect(&MainWindow.slotSaveFile);
+            //actions[2].triggered.connect(&MainWindow.slotSaveFile);
             
             actions[3].setShortcut(tr("Ctrl+Q"));
             actions[3].setStatusTip(tr("Exit the application"));
@@ -77,10 +79,10 @@ template MainWindow_UI() {
             //actions[8].triggered.connect(&MainWindow.slotPaste);
             
             actions[9].setStatusTip(tr("About collabEdit"));
-            actions[9].triggered.connect(&MainWindow.slotAbout);
+            actions[9].triggered.connect(&slotAbout);
         }
         
-        void createMenus(QMainWindow parent) {
+        void createMenus() {
             auto menu = parent.menuBar.addMenu(tr("&File"));
             
             menu.addAction(actions[0]);
@@ -106,7 +108,7 @@ template MainWindow_UI() {
             menu.addAction(actions[9]);
         }
         
-        void createToolBars(QMainWindow parent) {
+        void createToolBars() {
             auto bar = parent.addToolBar(tr("Connection"));
             bar.addAction(actions[0]);
             
@@ -120,15 +122,15 @@ template MainWindow_UI() {
             bar.addAction(actions[2]);
         }
         
-        void setupGlobal(QMainWindow parent) {
+        void setupGlobal() {
             resourceManager = new ResourceManager();
             
             parent.setWindowIcon(resourceManager.getIcon(ResourceManager.WINDOW_ICON));
             parent.setWindowTitle(tr("collabEdit"));
-            createActions(parent);
+            createActions();
             
-            createMenus(parent);
-            createToolBars(parent);
+            createMenus();
+            createToolBars();
             
             chat = new Chat();
             compiler = new Compiler();
@@ -148,7 +150,8 @@ template MainWindow_UI() {
         }
         
         void setupPreview(QMainWindow parent) {
-            setupGlobal(parent);
+            this.parent = parent;
+            setupGlobal();
             
             auto preview = new QLabel();
             preview.setAlignment(Qt.AlignCenter);
@@ -157,15 +160,21 @@ template MainWindow_UI() {
             parent.setCentralWidget(preview);
         }
         
-        void setupUi(QMainWindow parent) {
-            setupGlobal(parent);
-            
+        void setupUi() {
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
             parent.addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
             parent.addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
             
             parent.setCentralWidget(tabWidget);
+        }
+        
+        void slotOpenConnection() {
+            // open connection manager
+        }
+        
+        void slotAbout() {
+            QMessageBox.about(parent, tr("About collabEdit"), tr("Core Developers:\nLester Martin\n\nGUI Developers:\nDanny Trunk\n\nSome license stuff here..."));
         }
 }
 
