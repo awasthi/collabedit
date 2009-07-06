@@ -8,7 +8,7 @@ public {
 mixin QT_BEGIN_NAMESPACE;
 
 template Compiler_UI() {
-    public void setupUi(QTextEdit parent) {
+    private void setupUi(QTextEdit parent) {
         parent.setReadOnly(true);
     }
 }

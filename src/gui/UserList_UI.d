@@ -8,7 +8,7 @@ public {
 mixin QT_BEGIN_NAMESPACE;
 
 template UserList_UI() {
-    public void setupUi(QListView parent) {
+    private void setupUi(QListView parent) {
     }
 }
 

@@ -8,7 +8,7 @@ public {
 mixin QT_BEGIN_NAMESPACE;
 
 template ProjectTree_UI() {
-    public void setupUi(QTreeView parent) {
+    private void setupUi(QTreeView parent) {
     }
 }
 
