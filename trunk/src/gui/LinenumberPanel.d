@@ -1,8 +1,11 @@
 module src.gui.LinenumberPanel;
 
-import qt.gui.QPaintEvent;
-import src.gui.CodeEditor;
-import src.gui.Panel;
+private {
+    import qt.gui.QFrame;
+    import qt.gui.QPaintEvent;
+    import src.gui.CodeEditor;
+    import src.gui.Panel;
+}
 
 class LinenumberPanel : Panel {
     public:
