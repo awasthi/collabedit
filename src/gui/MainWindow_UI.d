@@ -161,6 +161,9 @@ template MainWindow_UI() {
         }
         
         void setupUi() {
+            foreach (dock; docks)
+                viewMenu.addAction(dock.toggleViewAction());
+            
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
             parent.addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
