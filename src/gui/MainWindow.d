@@ -12,6 +12,6 @@ class MainWindow : QMainWindow {
             
             setupGlobal(this);
             setupPreview();
-            setupUi();
+            //setupUi();
         }
 }
