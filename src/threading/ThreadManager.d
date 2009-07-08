@@ -8,6 +8,7 @@ private {
 
     debug(ThreadManager) {
         import tango.util.log.Trace;
+        import tango.io.Console;
     }
 }
 
@@ -490,7 +491,7 @@ public:
     this(ThreadManager _man, int _threadNum, int myNum) {
         man = _man;
         threadNum = _threadNum;
-        store = new TaskStore(myNum == 0 ? 1 * threadNum : myNum + threadNum);
+        store = new TaskStore(myNum == 0 ? ((2 * threadNum) + 2) : (((myNum + threadNum) * 2) + 2));
         killAccess = new Mutex;
         _kill = -1;
 
@@ -601,7 +602,7 @@ debug(ThreadManager) {
         int i;
 
     public:
-        this(int _i) { i = _i; }
+        this(int _i) { i = _i;}
         void dont() {
             Trace.formatln("I'm a thread {}", i);
         }
@@ -613,7 +614,7 @@ debug(ThreadManager) {
         man.start();
 
         for(int i = 0; i < 500000; i++) {
-            man.add(& ( new Temp(i) ).dont);
+            man.add(&(new Temp(i)).dont);
         }
 
         delete man;
