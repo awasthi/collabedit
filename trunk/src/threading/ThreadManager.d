@@ -487,10 +487,10 @@ private:
 public:
     TaskStore       store;
 
-    this(ThreadManager _man, int _threadNum) {
+    this(ThreadManager _man, int _threadNum, int myNum) {
         man = _man;
         threadNum = _threadNum;
-        store = new TaskStore(threadNum + 1);
+        store = new TaskStore(myNum == 0 ? 1 * threadNum : myNum + threadNum);
         killAccess = new Mutex;
         _kill = -1;
 
@@ -543,7 +543,7 @@ public:
         threadNum = numThread;
         Task prev;
         for(int i = 0; i < threadNum; i++) {
-            tasks[i] = new Task(this, threadNum);
+            tasks[i] = new Task(this, threadNum, i);
             tasks[i].pause;
             if(i != 0) {
                 prev.next = tasks[i];
@@ -608,7 +608,7 @@ debug(ThreadManager) {
     }
 
     void main() {
-        auto man = new ThreadManager(4);
+        auto man = new ThreadManager(3);
 
         man.start();
 
