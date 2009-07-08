@@ -8,6 +8,7 @@ public {
     import src.ResourceManager;
     import src.gui.Chat;
     import src.gui.Compiler;
+    import src.gui.ConnectionManager;
     import src.gui.ProjectTree;
     import src.gui.TabWidget;
     import src.gui.UserList;
@@ -29,6 +30,8 @@ template MainWindow_UI() {
         UserList userList;
         
         QDockWidget[] docks;
+        
+        ConnectionManager connectionMan;
         
         void createActions() {
             actions ~= new QAction(tr("&Open Connection"), parent);
@@ -149,6 +152,8 @@ template MainWindow_UI() {
             docks[2].setWidget(compiler);
             docks[3].setWidget(chat);
             
+            connectionMan = new ConnectionManager(parent);
+            
             parent.statusBar.showMessage(tr("Ready"));
         }
         
@@ -173,7 +178,7 @@ template MainWindow_UI() {
         }
         
         void slotOpenConnection() {
-            // open connection manager
+            connectionMan.show();
         }
         
         void slotAbout() {
