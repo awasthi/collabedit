@@ -7,6 +7,7 @@ mixin QT_BEGIN_NAMESPACE;
 template Editor_UI() {
     private:
         void setupUi(QPlainTextEdit parent) {
+            parent.setLineWrapMode(QPlainTextEdit_LineWrapMode.NoWrap);
         }
 }
 
