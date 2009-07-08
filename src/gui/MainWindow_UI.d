@@ -174,22 +174,26 @@ template MainWindow_UI() {
             parent.setCentralWidget(preview);
         }
         
-        void setupUi() {
-            viewMenu.addAction(docks[1].toggleViewAction());
-            viewMenu.addAction(docks[3].toggleViewAction());
-            
-            parent.addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
-            parent.addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
-            
-            parent.setCentralWidget(tabWidget);
-        }
-        
         void slotOpenConnection() {
             connectionMan.show();
         }
         
         void slotAbout() {
             QMessageBox.about(parent, tr("About collabEdit"), tr("Core Developers:\nLester Martin\n\nGUI Developers:\nDanny Trunk\n\nSome license stuff here..."));
+        }
+    
+    public:
+        void setupUi() {
+            viewMenu.removeAction(docks[0].toggleViewAction());
+            viewMenu.removeAction(docks[2].toggleViewAction());
+            
+            foreach (dock; docks)
+                viewMenu.addAction(dock.toggleViewAction());
+            
+            parent.addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
+            parent.addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
+            
+            parent.setCentralWidget(tabWidget);
         }
 }
 
