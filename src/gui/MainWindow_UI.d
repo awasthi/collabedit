@@ -120,7 +120,7 @@ template MainWindow_UI() {
             
             menu.addActions([new QAction(tr("D"), parent), new QAction(tr("Plain text"), parent)]);
             
-            bar = parent.addToolBar(tr("File"));
+            bar = parent.addToolBar(tr("New"));
             bar.addAction(menu.menuAction());
             bar.addAction(actions[2]);
         }
