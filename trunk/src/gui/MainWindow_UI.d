@@ -152,13 +152,22 @@ template MainWindow_UI() {
             docks[2].setWidget(compiler);
             docks[3].setWidget(chat);
             
+            viewMenu.addAction(docks[0].toggleViewAction());
+            viewMenu.addAction(docks[2].toggleViewAction());
+            
+            parent.addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
+            parent.addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
+            
             connectionMan = new ConnectionManager(parent);
             
             parent.statusBar.showMessage(tr("Ready"));
         }
         
         void setupPreview() {
+            
+            
             auto preview = new QLabel();
+            preview.setMargin(20);
             preview.setAlignment(Qt.AlignCenter);
             preview.setPixmap(resourceManager.getPixmap(ResourceManager.PREVIEW));
             
@@ -166,12 +175,10 @@ template MainWindow_UI() {
         }
         
         void setupUi() {
-            foreach (dock; docks)
-                viewMenu.addAction(dock.toggleViewAction());
+            viewMenu.addAction(docks[1].toggleViewAction());
+            viewMenu.addAction(docks[3].toggleViewAction());
             
-            parent.addDockWidget(Qt.LeftDockWidgetArea, docks[0]);
             parent.addDockWidget(Qt.LeftDockWidgetArea, docks[1]);
-            parent.addDockWidget(Qt.BottomDockWidgetArea, docks[2]);
             parent.addDockWidget(Qt.BottomDockWidgetArea, docks[3]);
             
             parent.setCentralWidget(tabWidget);
