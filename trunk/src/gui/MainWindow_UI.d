@@ -115,12 +115,12 @@ template MainWindow_UI() {
             auto bar = parent.addToolBar(tr("Connection"));
             bar.addAction(actions[0]);
             
-            auto menu = new QMenu(tr("File"));
+            auto menu = new QMenu(tr("New"));
             //menu.setIcon(...);
             
             menu.addActions([new QAction(tr("D"), parent), new QAction(tr("Plain text"), parent)]);
             
-            bar = parent.addToolBar(tr("New"));
+            bar = parent.addToolBar(tr("File"));
             bar.addAction(menu.menuAction());
             bar.addAction(actions[2]);
         }
