@@ -1,4 +1,4 @@
-module src.threading.ThreadManager;
+module src.threading.TaskManager;
 
 private {
     import tango.core.Exception;
@@ -14,9 +14,14 @@ private {
 
 alias void delegate()   TaskDG;
 alias TaskManager       ThreadManager;
-alias KillableThread    PermanentTask;
+typedef KillableThread  PermanentTask;
 
-public class KillableThread: Thread {
+public interface IExitThread {
+    void exit();
+    void Start();
+}
+
+public class KillableThread: Thread, IExitThread {
 protected:
     int                     _kill;
     Mutex                   _killMutex;
@@ -51,9 +56,22 @@ public:
             _kill = 1;
         _killMutex.unlock;
     }
+
+    void Start() {
+        super.start;
+    }
 }
 
-private class TaskRunner: KillableThread {
+public interface ITaskableTask: IExitThread {
+public:
+    void    pause();
+    void    proceed();
+    void    finish();
+    void    add(TaskDG task);
+    uint    count();
+}
+
+private class TaskRunner: KillableThread, ITaskableTask {
 private:
     bool execute(bool both = true) {
         TaskDG temp;
@@ -116,6 +134,14 @@ public:
         _killMutex.unlock;
     }
 
+    void add(TaskDG task) {
+        _store.push(task);
+    }
+
+    uint count() {
+        return _store.size;
+    }
+
     TaskDG steal() {
         if(_store.empty) {
             if(_next !is null)
@@ -129,11 +155,15 @@ public:
 public class TaskManager {
 private:
     TaskRunner[int]         _tasks;
+    ITaskableTask[int]      _ttasks;
+    PermanentTask[int]      _ptasks;
     int                     _threadCount;
+    int                     _ttCount, _ptCount;
 
 public:
     this(int threadCount) {
         _threadCount = threadCount;
+        _ttCount = _ptCount = 0;
         TaskRunner previous;
     
         for(int i = 0; i < _threadCount; i++) {
@@ -156,7 +186,13 @@ public:
     void start() {
         for(int i = 0; i < _threadCount; i++) {
             _tasks[i].proceed;
-            _tasks[i].start;
+            _tasks[i].Start;
+        }
+        for(int i = 0; i < _ttCount; i++) {
+            if(_ttasks[i] !is null) {
+                _ttasks[i].proceed;
+                _ttasks[i].Start;
+            }
         }
     }
 
@@ -164,11 +200,25 @@ public:
         for(int i = 0; i < _threadCount; i++) {
             _tasks[i].exit;
         }
+        for(int i = 0; i < _ttCount; i++) {
+            if(_ttasks[i] !is null) {
+                _ttasks[i].exit;
+            }
+        }
+        for(int i = 0; i < _ptCount; i++) {
+            if(_ptasks[i] !is null) 
+                _ptasks[i].exit;
+        }
     }
 
     void finish() {
         for(int i = 0; i < _threadCount; i++) {
             _tasks[i].finish;
+        }
+        for(int i = 0; i < _ttCount; i++) {
+            if(_ttasks[i] !is null) {
+                _ttasks[i].finish;
+            }
         }
     }
 
@@ -179,14 +229,38 @@ public:
     }
 
     void add(TaskDG task) {
-        int temp = 0;
+        int[2]     temp;
+        temp[0] = temp[1] = 0;
+        bool    which = true;
 
         for(int i = 0; i < _threadCount; i++) {
-            if(_tasks[i]._store.size < _tasks[temp]._store.size)
-                temp = i;
+            if(_tasks[i].count < _tasks[temp[0]].count)
+                temp[0] = i;
         }
 
-        _tasks[temp]._store.push(task);
+        for(int i = 0; i < _ttCount; i++) {
+            if(_ttasks[temp[1]] !is null && _ttasks[i] !is null)
+                if(_ttasks[i].count < _ttasks[temp[1]].count)
+                    temp[1] = i;
+        }
+
+        if(_ttasks !is null)
+            if(_ttasks[temp[1]] !is null)
+                if(_ttasks[temp[1]].count < _tasks[temp[0]].count)
+                    which = false;
+
+        if(!which && _ttasks[temp[1]] !is null)
+            _ttasks[temp[1]].add(task);
+        else
+            _tasks[temp[0]].add(task);
+    }
+
+    void add(PermanentTask task) {
+        _ptasks[_ptCount++] = task;
+    }
+
+    void add(ITaskableTask task) {
+        _ttasks[_ttCount++] = task;
     }
 }
 
@@ -197,19 +271,24 @@ debug(ThreadManager) {
     public:
         this(int _i) { i = _i;}
         void dont() {
-            Trace.formatln("I'm a thread {}", i);
+            //Trace.formatln("I'm a thread {}", i);
         }
     }
 
     void main() {
-        auto man = new ThreadManager(3);
+        for(int j = 0; j < 500; j++) {
 
-        man.start();
+            Trace.formatln(`{}`, j);
 
-        for(int i = 0; i < 500000; i++) {
-            man.add(&(new Temp(i)).dont);
+            auto man = new ThreadManager(3);
+
+            man.start();
+
+            for(int i = 0; i < 500000; i++) {
+                man.add(&(new Temp(i)).dont);
+            }
+
+            delete man;
         }
-
-        delete man;
     }
 } 

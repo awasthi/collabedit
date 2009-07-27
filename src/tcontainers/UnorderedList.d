@@ -5,7 +5,7 @@ private {
     import tango.core.Thread;
     import tango.core.sync.Mutex;
 
-    debug(ThreadManager) {
+    debug(UnorderedList) {
         import tango.util.log.Trace;
         import tango.io.Console;
     }
