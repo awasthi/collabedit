@@ -17,7 +17,6 @@ private {
     import qt.gui.QColor;
     import qt.gui.QBrush;
     import qt.gui.QTextCharFormat;
-    import qt.gui.QTextCharFormat_enum;
     debug(Configurator) {
         import tango.io.Stdout;
     }
