@@ -1,3 +1,5 @@
+<!-- TODO: put in a global configuration file of cedit -->
+<!-- (maybe cedit.xml on projects root dir) -->
 <extensions>
     <ext conf="d" ext="d,di"></ext>
     <ext conf="cpp" ext="c++,cpp,cc,h,c"></ext>
